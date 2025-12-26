@@ -1,34 +1,33 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Asset, Customer, User, Request, Handover, Dismantle, Division, AssetStatus, PreviewData, ActivityLogEntry, AssetCategory, UserRole } from '../../types';
-import Modal from '../../components/ui/Modal';
-import { ClickableLink } from '../../components/ui/ClickableLink';
-import { ChevronLeftIcon } from '../../components/icons/ChevronLeftIcon';
-import { ChevronRightIcon } from '../../components/icons/ChevronRightIcon';
-import { getStatusClass as getRequestStatusClass } from '../requests/new/components/RequestStatus';
-import { getStatusClass as getAssetStatusClass } from '../assetRegistration/RegistrationPage';
-import { getStatusClass as getCustomerStatusClass } from '../customers/list/CustomerListPage';
-import { PencilIcon } from '../../components/icons/PencilIcon';
-import { ArrowDownIcon } from '../../components/icons/ArrowDownIcon';
-import { ArrowUpIcon } from '../../components/icons/ArrowUpIcon';
-import { RegisterIcon } from '../../components/icons/RegisterIcon';
-import { HandoverIcon } from '../../components/icons/HandoverIcon';
-import { CustomerIcon } from '../../components/icons/CustomerIcon';
-import { DismantleIcon } from '../../components/icons/DismantleIcon';
-import { TagIcon } from '../../components/icons/TagIcon';
-import { InfoIcon } from '../../components/icons/InfoIcon';
-import { DownloadIcon } from '../../components/icons/DownloadIcon';
-import { EyeIcon } from '../../components/icons/EyeIcon';
-import { CopyIcon } from '../../components/icons/CopyIcon';
-import { Tooltip } from '../../components/ui/Tooltip';
-import { WrenchIcon } from '../../components/icons/WrenchIcon';
-import { SpinnerIcon } from '../../components/icons/SpinnerIcon';
-import { CheckIcon } from '../../components/icons/CheckIcon';
-import { ExclamationTriangleIcon } from '../../components/icons/ExclamationTriangleIcon';
-import { TrashIcon } from '../../components/icons/TrashIcon';
-import { UsersIcon } from '../../components/icons/UsersIcon';
+import Modal from './Modal';
+import { ClickableLink } from './ClickableLink';
+import { ChevronLeftIcon } from '../icons/ChevronLeftIcon';
+import { ChevronRightIcon } from '../icons/ChevronRightIcon';
+import { getStatusClass as getRequestStatusClass } from '../../features/requests/new/components/RequestStatus';
+import { getStatusClass as getAssetStatusClass } from '../../features/assetRegistration/RegistrationPage';
+import { getStatusClass as getCustomerStatusClass } from '../../features/customers/list/CustomerListPage';
+import { PencilIcon } from '../icons/PencilIcon';
+import { ArrowDownIcon } from '../icons/ArrowDownIcon';
+import { ArrowUpIcon } from '../icons/ArrowUpIcon';
+import { RegisterIcon } from '../icons/RegisterIcon';
+import { HandoverIcon } from '../icons/HandoverIcon';
+import { CustomerIcon } from '../icons/CustomerIcon';
+import { DismantleIcon } from '../icons/DismantleIcon';
+import { TagIcon } from '../icons/TagIcon';
+import { InfoIcon } from '../icons/InfoIcon';
+import { DownloadIcon } from '../icons/DownloadIcon';
+import { EyeIcon } from '../icons/EyeIcon';
+import { CopyIcon } from '../icons/CopyIcon';
+import { Tooltip } from './Tooltip';
+import { WrenchIcon } from '../icons/WrenchIcon';
+import { SpinnerIcon } from '../icons/SpinnerIcon';
+import { CheckIcon } from '../icons/CheckIcon';
+import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
+import { TrashIcon } from '../icons/TrashIcon';
+import { UsersIcon } from '../icons/UsersIcon';
 import { calculateAssetDepreciation } from '../../utils/depreciation';
-import { DollarIcon } from '../../components/icons/DollarIcon';
+import { DollarIcon } from '../icons/DollarIcon';
 
 // Stores
 import { useAssetStore } from '../../stores/useAssetStore';
@@ -751,3 +750,4 @@ const PreviewModal: React.FC<PreviewModalProps> = (props) => {
 };
 
 export default PreviewModal;
+

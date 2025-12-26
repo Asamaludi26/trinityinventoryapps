@@ -47,7 +47,10 @@ export const useMasterDataStore = create<MasterDataState>((set, get) => ({
 
   addUser: async (userData) => {
     const currentUsers = get().users;
-    const newId = Math.max(...currentUsers.map((u) => u.id), 0) + 1;
+    // Fix: Handle empty array case to prevent -Infinity
+    const newId = currentUsers.length > 0
+      ? Math.max(...currentUsers.map((u) => u.id)) + 1
+      : 1;
     const newUser = { ...userData, id: newId };
     
     const updatedUsers = [newUser, ...currentUsers];
@@ -71,7 +74,10 @@ export const useMasterDataStore = create<MasterDataState>((set, get) => ({
 
   addDivision: async (divData) => {
     const currentDivs = get().divisions;
-    const newId = Math.max(...currentDivs.map((d) => d.id), 0) + 1;
+    // Fix: Handle empty array case to prevent -Infinity
+    const newId = currentDivs.length > 0
+      ? Math.max(...currentDivs.map((d) => d.id)) + 1
+      : 1;
     const newDiv = { ...divData, id: newId };
     const updatedDivs = [newDiv, ...currentDivs];
     await api.updateData('app_divisions', updatedDivs);

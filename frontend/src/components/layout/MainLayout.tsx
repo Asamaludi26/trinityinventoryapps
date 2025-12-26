@@ -12,7 +12,7 @@ import { CommandPalette } from '../ui/CommandPalette';
 import { GlobalScannerModal } from '../ui/GlobalScannerModal';
 import { TopLoadingBar } from '../ui/TopLoadingBar';
 import { ContentSkeleton } from '../ui/ContentSkeleton';
-import PreviewModal from '../../features/preview/PreviewModal';
+import PreviewModal from '../ui/PreviewModal';
 import { WhatsAppSimulationModal } from '../ui/WhatsAppSimulationModal'; // IMPORT BARU
 
 // Stores

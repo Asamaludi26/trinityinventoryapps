@@ -50,9 +50,20 @@ const handleError = (error: any) => {
 
 // --- REAL API CLIENT (FETCH WRAPPER) ---
 const fetchClient = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
-    const token = localStorage.getItem('auth-storage') 
-        ? JSON.parse(localStorage.getItem('auth-storage')!).state?.currentUser?.token 
-        : null;
+    // Safe token extraction with proper error handling
+    let token: string | null = null;
+    try {
+        const stored = localStorage.getItem('auth-storage');
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            token = parsed?.state?.currentUser?.token || null;
+        }
+    } catch (error) {
+        console.error('Failed to parse auth storage:', error);
+        // Clean up corrupted data
+        localStorage.removeItem('auth-storage');
+        token = null;
+    }
 
     const headers = {
         'Content-Type': 'application/json',
@@ -68,7 +79,9 @@ const fetchClient = async <T>(endpoint: string, options: RequestInit = {}): Prom
         }
         return response.json();
     } catch (error) {
-        return handleError(error);
+        // handleError throws the error, so we should re-throw it
+        handleError(error);
+        throw error; // Explicit throw for type safety
     }
 };
 

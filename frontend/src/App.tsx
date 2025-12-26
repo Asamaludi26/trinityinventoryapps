@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Page, PreviewData, Asset, Request, LoanRequest, AssetReturn } from "./types";
 
 // Providers
@@ -18,7 +18,7 @@ import ItemRegistration from "./features/assetRegistration/RegistrationPage";
 import ItemHandoverPage from "./features/handover/HandoverPage";
 import RepairManagementPage from "./features/repair/RepairManagementPage";
 import CustomerManagementPage from "./features/customers/CustomerManagementPage";
-import { AccountsPage } from "./features/users/AccountsPage";
+import { UsersHubPage } from "./features/users/UsersHubPage";
 import CategoryManagementPage from "./features/categories/CategoryManagementPage";
 import ManageAccountPage from "./features/users/ManageAccountPage";
 import UserFormPage from "./features/users/UserFormPage";
@@ -48,26 +48,49 @@ const AppContent: React.FC = () => {
   const clearPageInitialState = useUIStore((state) => state.clearPageInitialState);
 
   // --- Auth State ---
-  const currentUser = useAuthStore((state) => state.currentUser)!;
+  const currentUser = useAuthStore((state) => state.currentUser);
   const logout = useAuthStore((state) => state.logout);
+
+  // --- Safety Check: currentUser should never be null in AppContent ---
+  if (!currentUser) {
+    return <FullPageLoader message="Memuat sesi pengguna..." />;
+  }
 
   // --- Data Stores Initialization ---
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadAllData = async () => {
-      await Promise.all([
-        useAssetStore.getState().fetchAssets(),
-        useRequestStore.getState().fetchRequests(),
-        useTransactionStore.getState().fetchTransactions(),
-        useMasterDataStore.getState().fetchMasterData(),
-        useNotificationStore.getState().fetchNotifications(),
-        new Promise(resolve => setTimeout(resolve, 800)) 
-      ]);
-      setIsDataLoading(false);
+      try {
+        await Promise.all([
+          useAssetStore.getState().fetchAssets(),
+          useRequestStore.getState().fetchRequests(),
+          useTransactionStore.getState().fetchTransactions(),
+          useMasterDataStore.getState().fetchMasterData(),
+          useNotificationStore.getState().fetchNotifications(),
+          new Promise(resolve => setTimeout(resolve, 800)) 
+        ]);
+        
+        // Only update state if component is still mounted
+        if (isMounted) {
+          setIsDataLoading(false);
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        if (isMounted) {
+          setIsDataLoading(false);
+        }
+      }
     };
 
     loadAllData();
+
+    // Cleanup function to prevent state updates on unmounted component
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // --- Transition Wrapper ---
@@ -235,6 +258,12 @@ const AppContent: React.FC = () => {
       case "return-form": {
         const loanRequestForReturn = useRequestStore.getState().loanRequests.find(lr => lr.id === pageInitialState?.loanId);
         
+        // Safety check: if loan request not found, redirect to loan requests page
+        if (!loanRequestForReturn) {
+          setActivePage('request-pinjam');
+          return <FullPageLoader message="Memuat data..." />;
+        }
+        
         let assetsToReturn: Asset[] = [];
         if (pageInitialState?.assetIds && Array.isArray(pageInitialState.assetIds)) {
              assetsToReturn = useAssetStore.getState().assets.filter(a => pageInitialState.assetIds.includes(a.id));
@@ -246,7 +275,7 @@ const AppContent: React.FC = () => {
         return (
              <ReturnAssetFormPage 
                 currentUser={currentUser}
-                onCancel={() => setActivePage('request-pinjam', { openDetailForId: loanRequestForReturn?.id })}
+                onCancel={() => setActivePage('request-pinjam', { openDetailForId: loanRequestForReturn.id })}
                 loanRequest={loanRequestForReturn}
                 assetsToReturn={assetsToReturn}
                 onShowPreview={handleShowPreview}
@@ -308,10 +337,11 @@ const AppContent: React.FC = () => {
 
       case "pengaturan-pengguna":
         return (
-          <AccountsPage
+          <UsersHubPage
             currentUser={currentUser}
             setActivePage={setActivePage}
             onShowPreview={handleShowPreview}
+            pageInitialState={pageInitialState}
           />
         );
 
@@ -401,16 +431,27 @@ const App: React.FC = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   
   useEffect(() => {
-      const checkHydration = setInterval(() => {
+      let hydrationInterval: NodeJS.Timeout | null = null;
+
+      const checkHydration = () => {
         if (useAuthStore.persist.hasHydrated() && useUIStore.persist.hasHydrated()) {
           setIsHydrated(true);
-          clearInterval(checkHydration);
+          if (hydrationInterval) {
+            clearInterval(hydrationInterval);
+            hydrationInterval = null;
+          }
         }
-      }, 50);
+      };
 
+      hydrationInterval = setInterval(checkHydration, 50);
       checkSession();
-      return () => clearInterval(checkHydration);
-  }, [checkSession]);
+
+      return () => {
+        if (hydrationInterval) {
+          clearInterval(hydrationInterval);
+        }
+      };
+  }, []); // Remove checkSession from deps to prevent unnecessary re-runs
 
   if (!isHydrated) {
     return <FullPageLoader message="Memulai Sistem..." />;

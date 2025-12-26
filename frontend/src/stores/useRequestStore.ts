@@ -134,13 +134,21 @@ export const useRequestStore = create<RequestState>((set, get) => ({
   updateRequest: async (id, data) => {
     const current = get().requests;
     const originalRequest = current.find(r => r.id === id);
+    
+    // Safety check: return early if request not found
+    if (!originalRequest) {
+      console.error('Request not found:', id);
+      useNotificationStore.getState().addToast('Request tidak ditemukan.', 'error');
+      return;
+    }
+    
     const updated = current.map(r => r.id === id ? { ...r, ...data } : r);
     await api.updateData('app_requests', updated);
     set({ requests: updated });
     
-    if (originalRequest && data.status && data.status !== originalRequest.status) {
-        const updatedReq = updated.find(r => r.id === id)!;
-        if (data.status === ItemStatus.LOGISTIC_APPROVED) {
+    if (data.status && data.status !== originalRequest.status) {
+        const updatedReq = updated.find(r => r.id === id);
+        if (updatedReq && data.status === ItemStatus.LOGISTIC_APPROVED) {
             const waPayload = WhatsAppService.generateLogisticApprovalPayload(updatedReq, data.logisticApprover || 'Admin');
             triggerWAModal(waPayload);
         }
