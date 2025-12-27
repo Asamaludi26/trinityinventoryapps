@@ -51,15 +51,20 @@ export const useAssetStore = create<AssetState>((set, get) => ({
     set({ isLoading: true });
     try {
       const data = await api.fetchAllData();
+      // Type-safe access to stockMovements
+      const stockMovements = 'stockMovements' in data && Array.isArray(data.stockMovements) 
+        ? data.stockMovements as StockMovement[]
+        : [];
       set({ 
           assets: data.assets || [], 
           categories: data.assetCategories || [], 
-          stockMovements: (data as any).stockMovements || [],
+          stockMovements,
           isLoading: false 
       });
     } catch (error) {
       set({ isLoading: false });
-      // Error handled by Interceptor
+      // Error handled by Interceptor, but log for debugging
+      console.error('Failed to fetch assets:', error);
     }
   },
 
@@ -74,12 +79,18 @@ export const useAssetStore = create<AssetState>((set, get) => ({
     const category = get().categories.find(c => c.name === asset.category);
     const type = category?.types.find(t => t.name === asset.type);
     
+    // Type-safe access to quantity for bulk items
+    const rawAssetWithQuantity = rawAsset as Asset & { quantity?: number };
+    const quantity = (type?.trackingMethod === 'bulk' && typeof rawAssetWithQuantity.quantity === 'number') 
+      ? rawAssetWithQuantity.quantity 
+      : 1;
+    
     await get().recordMovement({
          assetName: asset.name,
          brand: asset.brand,
          date: asset.registrationDate,
          type: 'IN_PURCHASE',
-         quantity: (type?.trackingMethod === 'bulk' && (rawAsset as any).quantity) ? (rawAsset as any).quantity : 1,
+         quantity,
          referenceId: asset.poNumber || 'Initial',
          actor: asset.recordedBy,
          notes: 'Penerimaan barang baru'
@@ -108,13 +119,17 @@ export const useAssetStore = create<AssetState>((set, get) => ({
          }
 
          if (type) {
+              // Type-safe access to woRoIntNumber
+              const updateData = data as Partial<Asset>;
+              const referenceId = updateData.woRoIntNumber || originalAsset.woRoIntNumber || 'Status Update';
+              
               await get().recordMovement({
                  assetName: originalAsset.name,
                  brand: originalAsset.brand,
                  date: new Date().toISOString(),
                  type: type,
                  quantity: 1,
-                 referenceId: (data as any).woRoIntNumber || 'Status Update',
+                 referenceId,
                  actor: 'System', 
                  notes: `Otomatis dari perubahan status: ${originalAsset.status} -> ${data.status}`
              });

@@ -56,7 +56,10 @@ const fetchClient = async <T>(endpoint: string, options: RequestInit = {}): Prom
         const stored = localStorage.getItem('auth-storage');
         if (stored) {
             const parsed = JSON.parse(stored);
-            token = parsed?.state?.currentUser?.token || null;
+            // Validate parsed is an object before accessing properties
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                token = parsed?.state?.currentUser?.token || null;
+            }
         }
     } catch (error) {
         console.error('Failed to parse auth storage:', error);

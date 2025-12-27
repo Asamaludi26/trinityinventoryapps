@@ -54,6 +54,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       });
     } catch (error) {
       set({ isLoading: false });
+      // Error handled by Interceptor, but log for debugging
+      console.error('Failed to fetch transactions:', error);
     }
   },
 

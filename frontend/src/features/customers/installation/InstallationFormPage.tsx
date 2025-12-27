@@ -418,6 +418,16 @@ const InstallationForm: React.FC<{
       return;
     }
 
+    // Validate required fields before submission
+    if (!installationDate) {
+      addNotification("Tanggal instalasi harus diisi.", "error");
+      return;
+    }
+    if (!selectedCustomer) {
+      addNotification("Pelanggan harus dipilih.", "error");
+      return;
+    }
+
     setIsLoading(true);
 
     const finalMaterials = materialsUsed
@@ -447,10 +457,10 @@ const InstallationForm: React.FC<{
       onSave({
         docNumber,
         requestNumber: requestNumber || undefined,
-        installationDate: installationDate!.toISOString().split("T")[0],
+        installationDate: installationDate.toISOString().split("T")[0],
         technician,
-        customerId: selectedCustomer!.id,
-        customerName: selectedCustomer!.name,
+        customerId: selectedCustomer.id,
+        customerName: selectedCustomer.name,
         assetsInstalled,
         materialsUsed: finalMaterials.length > 0 ? finalMaterials : undefined,
         notes,

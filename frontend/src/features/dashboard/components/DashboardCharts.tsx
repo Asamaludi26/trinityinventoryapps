@@ -206,7 +206,7 @@ interface TechLeaderboardProps {
 }
 
 export const TechnicianLeaderboard: React.FC<TechLeaderboardProps> = ({ data }) => {
-    const maxValue = Math.max(...data.map(d => d.count), 1);
+    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.count), 1) : 1;
     const colors = ['bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-rose-500'];
 
     return (

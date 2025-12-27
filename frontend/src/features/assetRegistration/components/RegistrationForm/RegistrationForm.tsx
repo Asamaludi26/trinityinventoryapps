@@ -480,6 +480,13 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       return;
     }
 
+    // Validate required dates before submission
+    if (!purchaseDate || !registrationDate) {
+      addNotification("Tanggal pembelian dan tanggal registrasi harus diisi.", "error");
+      setIsSubmitting(false);
+      return;
+    }
+
     const formData: RegistrationFormData = {
       assetName,
       category: selectedCategory?.name || "",
@@ -489,8 +496,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       vendor: vendor || null,
       poNumber: poNumber || null,
       invoiceNumber: invoiceNumber || null,
-      purchaseDate: purchaseDate!.toISOString().split("T")[0],
-      registrationDate: registrationDate!.toISOString().split("T")[0],
+      purchaseDate: purchaseDate.toISOString().split("T")[0],
+      registrationDate: registrationDate.toISOString().split("T")[0],
       recordedBy: currentUser.name,
       warrantyEndDate: warrantyDate
         ? warrantyDate.toISOString().split("T")[0]
