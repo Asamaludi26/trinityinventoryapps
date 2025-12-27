@@ -1,40 +1,37 @@
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { User, Page, PreviewData } from '../../types';
-import { Sidebar } from './Sidebar';
-import { NotificationBell } from '../ui/NotificationBell';
-import { MenuIcon } from '../icons/MenuIcon';
-import { QrCodeIcon } from '../icons/QrCodeIcon';
-import { ChevronDownIcon } from '../icons/ChevronDownIcon';
-import { UserCogIcon } from '../icons/UserCogIcon';
-import { LogoutIcon } from '../icons/LogoutIcon';
-import { CommandPalette } from '../ui/CommandPalette';
-import { GlobalScannerModal } from '../ui/GlobalScannerModal';
-import { TopLoadingBar } from '../ui/TopLoadingBar';
-import { ContentSkeleton } from '../ui/ContentSkeleton';
-import PreviewModal from '../ui/PreviewModal';
-import { WhatsAppSimulationModal } from '../ui/WhatsAppSimulationModal'; // IMPORT BARU
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
+import type { User, Page, PreviewData } from "../../types";
+import { Sidebar } from "./Sidebar";
+import { NotificationBell } from "../ui/NotificationBell";
+import { MenuIcon } from "../icons/MenuIcon";
+import { QrCodeIcon } from "../icons/QrCodeIcon";
+import { ChevronDownIcon } from "../icons/ChevronDownIcon";
+import { UserCogIcon } from "../icons/UserCogIcon";
+import { LogoutIcon } from "../icons/LogoutIcon";
+import { CommandPalette } from "../ui/CommandPalette";
+import { GlobalScannerModal } from "../ui/GlobalScannerModal";
+import { TopLoadingBar } from "../ui/TopLoadingBar";
+import { ContentSkeleton } from "../ui/ContentSkeleton";
+import PreviewModal from "../ui/PreviewModal";
+import { WhatsAppSimulationModal } from "../ui/WhatsAppSimulationModal";
 
 // Stores
-import { useUIStore } from '../../stores/useUIStore';
-import { useAuthStore } from '../../stores/useAuthStore';
+import { useUIStore } from "../../stores/useUIStore";
 
 interface MainLayoutProps {
   children: React.ReactNode;
   currentUser: User;
   onLogout: () => void;
-  // Global Actions passed down for Header/Sidebar
   setActivePage: (page: Page, filters?: any) => void;
   onShowPreview: (data: PreviewData) => void;
-  // Scanner Actions
   onOpenScanner: () => void;
-  // Modal States
   isGlobalScannerOpen: boolean;
   setIsGlobalScannerOpen: (open: boolean) => void;
   onScanSuccess: (data: any) => void;
   previewData: PreviewData | null;
   setPreviewData: (data: PreviewData | null) => void;
-  // Action callbacks for Preview Modal
   previewActions: {
     onInitiateHandover: (asset: any) => void;
     onInitiateDismantle: (asset: any) => void;
@@ -44,27 +41,39 @@ interface MainLayoutProps {
     onMarkAsRepaired: () => void;
     onDecommission: () => void;
     onReceiveFromRepair: () => void;
-    onToggleVisibility?: () => void; // Fixed missing optional
+    onToggleVisibility?: () => void;
     onAddProgressUpdate: () => void;
     onEditItem: (data: any) => void;
-  }
+  };
 }
 
-const getRoleClass = (role: User["role"]) => {
-  switch (role) {
-    case "Super Admin": return "bg-purple-100 text-purple-800";
-    case "Admin Logistik": return "bg-info-light text-info-text";
-    case "Admin Purchase": return "bg-teal-100 text-teal-800";
-    case "Leader": return "bg-sky-100 text-sky-800";
-    default: return "bg-gray-100 text-gray-800";
-  }
+const getRoleBadgeStyles = (role: User["role"]) => {
+  const styles = {
+    "Super Admin": "bg-purple-100 text-purple-700 ring-purple-200",
+    "Admin Logistik": "bg-sky-100 text-sky-700 ring-sky-200",
+    "Admin Purchase": "bg-teal-100 text-teal-700 ring-teal-200",
+    Leader: "bg-amber-100 text-amber-700 ring-amber-200",
+    Staff: "bg-slate-100 text-slate-700 ring-slate-200",
+  };
+  return styles[role] || styles["Staff"];
 };
 
-export const MainLayout: React.FC<MainLayoutProps> = ({ 
-  children, 
-  currentUser, 
-  onLogout, 
-  setActivePage, 
+const getAvatarColor = (role: User["role"]) => {
+  const colors = {
+    "Super Admin": "bg-purple-600",
+    "Admin Logistik": "bg-sky-600",
+    "Admin Purchase": "bg-teal-600",
+    Leader: "bg-amber-600",
+    Staff: "bg-slate-600",
+  };
+  return colors[role] || colors["Staff"];
+};
+
+export const MainLayout: React.FC<MainLayoutProps> = ({
+  children,
+  currentUser,
+  onLogout,
+  setActivePage,
   onShowPreview,
   onOpenScanner,
   isGlobalScannerOpen,
@@ -72,7 +81,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   onScanSuccess,
   previewData,
   setPreviewData,
-  previewActions
+  previewActions,
 }) => {
   // UI Store
   const activePage = useUIStore((state) => state.activePage);
@@ -88,7 +97,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   // Close profile dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target as Node)
+      ) {
         setIsProfileDropdownOpen(false);
       }
     };
@@ -124,67 +136,136 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 md:ml-64 transition-all duration-300">
-        
-        {/* Header */}
-        <header className="sticky top-0 z-20 flex items-center justify-between w-full h-16 px-4 bg-white border-b border-gray-200 no-print shadow-sm">
+        <header className="sticky top-0 z-20 flex items-center justify-between w-full h-16 px-4 sm:px-6 bg-white/80 backdrop-blur-md border-b border-slate-200/80 no-print">
+          {/* Left side - Mobile menu toggle */}
           <div className="flex items-center gap-4">
-            <button onClick={() => setSidebarOpen(true)} className="text-gray-500 md:hidden p-2 hover:bg-gray-100 rounded-lg">
-              <MenuIcon className="w-6 h-6" />
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all duration-200 md:hidden"
+            >
+              <MenuIcon className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            <button 
-                onClick={() => setIsCommandPaletteOpen(true)}
-                className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 bg-gray-100 rounded-lg hover:text-gray-600 hover:bg-gray-200 transition-colors"
+          {/* Right side - Actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Command Palette Trigger */}
+            <button
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="hidden md:flex items-center gap-2 h-9 px-3 text-sm text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all duration-200"
             >
-                <span>Cari...</span>
-                <kbd className="px-1.5 py-0.5 text-xs font-semibold text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm">⌘K</kbd>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <span className="text-slate-400">Cari...</span>
+              <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white border border-slate-200 rounded shadow-sm">
+                <span className="text-xs">⌘</span>K
+              </kbd>
             </button>
 
+            {/* Notification Bell */}
             <NotificationBell
               currentUser={currentUser}
               setActivePage={setActivePage}
               onShowPreview={onShowPreview}
             />
-            
+
+            {/* QR Scanner Button */}
             <button
               onClick={onOpenScanner}
-              className="p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-tm-primary transition-colors"
+              className="p-2 text-slate-500 hover:text-tm-primary hover:bg-tm-primary-light rounded-xl transition-all duration-200"
               title="Pindai QR Aset"
             >
-              <QrCodeIcon className="w-6 h-6" />
+              <QrCodeIcon className="w-5 h-5" />
             </button>
+
+            {/* Divider */}
+            <div className="hidden sm:block w-px h-8 bg-slate-200" />
 
             {/* Profile Dropdown */}
             <div className="relative" ref={profileDropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
+                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-50 transition-all duration-200 border border-transparent hover:border-slate-200"
               >
+                {/* User info - hidden on mobile */}
                 <div className="text-right hidden sm:block">
-                  <span className="block text-sm font-medium text-gray-700">{currentUser.name}</span>
-                  <span className="block text-xs text-gray-500">{currentUser.role}</span>
+                  <span className="block text-sm font-semibold text-slate-800 leading-tight">
+                    {currentUser.name}
+                  </span>
+                  <span
+                    className={`inline-flex text-[10px] font-medium px-1.5 py-0.5 rounded-md ring-1 ring-inset ${getRoleBadgeStyles(
+                      currentUser.role
+                    )}`}
+                  >
+                    {currentUser.role}
+                  </span>
                 </div>
-                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${getRoleClass(currentUser.role).split(' ')[0].replace('text-', 'bg-').replace('100', '500')}`}>
-                    {currentUser.name.charAt(0)}
+
+                {/* Avatar */}
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-sm ${getAvatarColor(
+                    currentUser.role
+                  )}`}
+                >
+                  {currentUser.name.charAt(0).toUpperCase()}
                 </div>
-                <ChevronDownIcon className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : ""}`} />
+
+                <ChevronDownIcon
+                  className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                    isProfileDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
-              
+
+              {/* Dropdown Menu */}
               {isProfileDropdownOpen && (
-                <div className="absolute right-0 z-30 w-56 mt-2 origin-top-right bg-white border border-gray-200 rounded-xl shadow-lg animate-zoom-in ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-1">
-                    <div className="px-3 py-2 mb-1 border-b border-gray-100 sm:hidden">
-                      <p className="text-sm font-semibold text-gray-800">{currentUser.name}</p>
-                      <p className="text-xs text-gray-500">{currentUser.role}</p>
-                    </div>
-                    <button onClick={() => { setActivePage("pengaturan-akun"); setIsProfileDropdownOpen(false); }} className="flex items-center w-full gap-3 px-3 py-2 text-sm text-left text-gray-700 rounded-lg hover:bg-gray-50 hover:text-tm-primary transition-colors">
-                      <UserCogIcon className="w-4 h-4" /> <span>Kelola Akun</span>
+                <div className="absolute right-0 z-30 w-56 mt-2 origin-top-right bg-white border border-slate-200 rounded-2xl shadow-xl animate-zoom-in overflow-hidden">
+                  {/* Mobile user info */}
+                  <div className="px-4 py-3 border-b border-slate-100 sm:hidden">
+                    <p className="text-sm font-semibold text-slate-800">
+                      {currentUser.name}
+                    </p>
+                    <span
+                      className={`inline-flex text-[10px] font-medium mt-1 px-2 py-0.5 rounded-md ring-1 ring-inset ${getRoleBadgeStyles(
+                        currentUser.role
+                      )}`}
+                    >
+                      {currentUser.role}
+                    </span>
+                  </div>
+
+                  {/* Menu items */}
+                  <div className="p-1.5">
+                    <button
+                      onClick={() => {
+                        setActivePage("pengaturan-akun");
+                        setIsProfileDropdownOpen(false);
+                      }}
+                      className="flex items-center w-full gap-3 px-3 py-2.5 text-sm text-slate-700 rounded-xl hover:bg-slate-50 hover:text-tm-primary transition-colors"
+                    >
+                      <UserCogIcon className="w-4 h-4" />
+                      <span className="font-medium">Kelola Akun</span>
                     </button>
-                    <div className="my-1 border-t border-gray-100"></div>
-                    <button onClick={onLogout} className="flex items-center w-full gap-3 px-3 py-2 text-sm text-left text-red-600 rounded-lg hover:bg-red-50 transition-colors">
-                      <LogoutIcon className="w-4 h-4" /> <span>Keluar</span>
+
+                    <div className="my-1.5 border-t border-slate-100" />
+
+                    <button
+                      onClick={onLogout}
+                      className="flex items-center w-full gap-3 px-3 py-2.5 text-sm text-red-600 rounded-xl hover:bg-red-50 transition-colors"
+                    >
+                      <LogoutIcon className="w-4 h-4" />
+                      <span className="font-medium">Keluar</span>
                     </button>
                   </div>
                 </div>
@@ -195,7 +276,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
         {/* Main Content Scroll Area */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-tm-light relative">
-            {isPageLoading ? <ContentSkeleton /> : children}
+          {isPageLoading ? <ContentSkeleton /> : children}
         </main>
       </div>
 
