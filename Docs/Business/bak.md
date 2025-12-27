@@ -81,6 +81,7 @@
             }
         }
     </style>
+
 </head>
 <body>
     <div class="page">
@@ -95,7 +96,7 @@
 
         <ol>
             <li>
-                Bahwa <strong>Angga Samuludi Septiawan</strong> ("PIHAK KEDUA") telah mengajukan proposal penawaran untuk pengembangan Aplikasi kepada <strong>PT. TRINITI MEDIA INDONESIA</strong> ("PIHAK PERTAMA") sesuai proposal Nomor: Q-INV/AS/X/2025/001 perihal Penawaran Pengembangan Aplikasi Inventori Aset.
+                Bahwa <strong>Angga Samuludi Septiawan</strong> ("PIHAK KEDUA") telah mengajukan proposal penawaran untuk pengembangan Aplikasi kepada <strong>PT. Trinity MEDIA INDONESIA</strong> ("PIHAK PERTAMA") sesuai proposal Nomor: Q-INV/AS/X/2025/001 perihal Penawaran Pengembangan Aplikasi Inventori Aset.
             </li>
             <li>
                 Atas rencana kerjasama tersebut telah disetujui oleh Direksi PIHAK PERTAMA sesuai dengan Perjanjian Kerja Nomor: 001/SPK-DEV/TMI-AS/X/2025 tentang Pengembangan Perangkat Lunak Inventori Aset.
@@ -167,13 +168,13 @@
                 Ketentuan lain yang terkait kerjasama ini dituangkan dalam Perjanjian Kerja yang berlaku dan menjadi satu kesatuan yang tidak terpisahkan dengan Berita Acara ini.
             </li>
         </ol>
-        
+
         <p>Demikian berita acara ini dibuat dan ditandatangani oleh Para Pihak dalam keadaan sadar dan tanpa ada paksaan dari pihak manapun untuk dipergunakan sebagaimana mestinya.</p>
 
         <div class="signature-block">
             <div>
                 <p>PIHAK PERTAMA,</p>
-                <p><strong>PT. TRINITI MEDIA INDONESIA</strong></p>
+                <p><strong>PT. Trinity MEDIA INDONESIA</strong></p>
                 <div class="signature-line">
                     <p><strong>(.........................................)</strong></p>
                     <p>Direktur Utama</p>
@@ -188,5 +189,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>

@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { TrinitiLogoIcon } from "../icons/TrinitiLogoIcon";
+import { TrinityLogoIcon } from "../icons/TrinityLogoIcon";
 
 interface FullPageLoaderProps {
   message?: string;
@@ -20,14 +20,14 @@ export const FullPageLoader: React.FC<FullPageLoaderProps> = ({
 
           {/* Inner container */}
           <div className="relative bg-white p-5 rounded-2xl shadow-xl border border-slate-100">
-            <TrinitiLogoIcon className="w-14 h-14 text-tm-primary" />
+            <TrinityLogoIcon className="w-14 h-14 text-tm-primary" />
           </div>
         </div>
 
         {/* Brand text */}
         <div className="flex flex-col items-center gap-3">
           <h1 className="text-xl font-bold tracking-tight text-slate-900">
-            Triniti<span className="font-normal text-slate-500">Asset</span>
+            Trinity<span className="font-normal text-slate-500">Asset</span>
           </h1>
 
           {/* Loading indicator */}

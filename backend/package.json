@@ -1,8 +1,7 @@
-
 {
-  "name": "triniti-asset-backend",
+  "name": "trinity-asset-backend",
   "version": "0.0.1",
-  "description": "Backend API for Triniti Asset Inventory Management",
+  "description": "Backend API for Trinity Asset Inventory Management",
   "author": "Angga Samuludi Septiawan",
   "private": true,
   "license": "UNLICENSED",

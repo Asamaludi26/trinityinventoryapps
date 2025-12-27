@@ -1,23 +1,28 @@
-
 # Panduan Deployment: Docker & Proxmox
 
 Dokumen ini diperbarui untuk merekomendasikan penggunaan **Docker** sebagai metode deployment utama. Ini adalah cara termudah dan paling stabil untuk menjalankan aplikasi Full-Stack di server Linux (termasuk VM di Proxmox).
 
 ## 1. Konsep Deployment
+
 Kita akan menjalankan 3 container (layanan) yang saling terhubung:
+
 1.  **PostgreSQL**: Database.
 2.  **Backend (NestJS)**: API Server.
 3.  **Frontend (Nginx)**: Web Server untuk menyajikan file React statis.
 
 ## 2. Persiapan VM (Proxmox) & Hardware Requirement
+
 Minta tim infrastruktur untuk menyiapkan VM dengan spesifikasi minimal:
-*   OS: Ubuntu 22.04 LTS / Debian 11+
-*   CPU: 2 Core
-*   RAM: 4 GB
-*   Disk: 20 GB
+
+- OS: Ubuntu 22.04 LTS / Debian 11+
+- CPU: 2 Core
+- RAM: 4 GB
+- Disk: 20 GB
 
 ### QEMU Guest Agent (Wajib)
+
 Fitur ini memastikan Proxmox dapat memantau IP dan melakukan shutdown VM dengan aman.
+
 1.  **Di Proxmox Node**: Klik VM > Options > QEMU Guest Agent > **Enabled**.
 2.  **Di dalam VM (SSH)**:
     ```bash
@@ -27,6 +32,7 @@ Fitur ini memastikan Proxmox dapat memantau IP dan melakukan shutdown VM dengan 
 3.  **Reboot VM** (Cold Boot diperlukan agar setting Proxmox aktif).
 
 **Install Docker di VM:**
+
 ```bash
 # Update repo
 sudo apt-get update
@@ -38,15 +44,17 @@ sudo apt install docker-compose-plugin
 ```
 
 ## 3. Struktur File Deployment
-Di server, buat folder `/opt/triniti-app` dan buat file `docker-compose.yml`.
+
+Di server, buat folder `/opt/trinity-app` dan buat file `docker-compose.yml`.
 
 ### Persistent Database Volumes (PENTING)
-AI Studio/Docker Container bersifat *ephemeral* (sementara). Agar data inventori tidak hilang saat container di-restart atau di-update, kita wajib memetakan volume ke disk fisik VM.
+
+AI Studio/Docker Container bersifat _ephemeral_ (sementara). Agar data inventori tidak hilang saat container di-restart atau di-update, kita wajib memetakan volume ke disk fisik VM.
 
 Pastikan konfigurasi `volumes` di bawah ini ada:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   # 1. Database
@@ -59,19 +67,19 @@ services:
       POSTGRES_DB: triniti_inventory
     # PERSISTENT STORAGE MAPPING
     volumes:
-      - ./pgdata:/var/lib/postgresql/data 
+      - ./pgdata:/var/lib/postgresql/data
     networks:
       - app_net
 
   # 2. Backend API
   api:
-    image: triniti/backend:latest
+    image: trinity/backend:latest
     restart: always
     build: ./backend
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/triniti_inventory
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/trinity_inventory
       PORT: 3000
       JWT_SECRET: ${JWT_SECRET}
     ports:
@@ -81,7 +89,7 @@ services:
 
   # 3. Frontend (Web Server)
   web:
-    image: triniti/frontend:latest
+    image: trinity/frontend:latest
     restart: always
     build: ./frontend
     ports:
@@ -105,32 +113,35 @@ networks:
 AI Studio tidak dapat mengonfigurasi SSL nyata. Anda harus melakukannya manual di VM menggunakan Certbot (Let's Encrypt).
 
 ### Langkah Instalasi Certbot di VM Host:
-1.  Pastikan domain (misal: `aset.trinitimedia.com`) sudah diarahkan ke IP Public VM.
+
+1.  Pastikan domain (misal: `aset.trinitymedia.com`) sudah diarahkan ke IP Public VM.
 2.  Install Certbot:
     ```bash
     sudo apt install certbot
     ```
 3.  Generate Sertifikat (Port 80 harus kosong sementara):
     ```bash
-    sudo certbot certonly --standalone -d aset.trinitimedia.com
+    sudo certbot certonly --standalone -d aset.trinitymedia.co.id
     ```
-4.  Sertifikat akan tersimpan di `/etc/letsencrypt/live/aset.trinitimedia.com/`.
+4.  Sertifikat akan tersimpan di `/etc/letsencrypt/live/aset.trinitymedia.co.id/`.
 
 ### Konfigurasi Nginx (nginx.conf):
+
 Buat file `nginx.conf` di sebelah `docker-compose.yml`:
+
 ```nginx
 server {
     listen 80;
-    server_name aset.trinitimedia.com;
+    server_name aset.trinitymedia.co.id;
     return 301 https://$host$request_uri; # Redirect HTTP to HTTPS
 }
 
 server {
     listen 443 ssl;
-    server_name aset.trinitimedia.com;
+    server_name aset.trinitymedia.co.id;
 
-    ssl_certificate /etc/letsencrypt/live/aset.trinitimedia.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/aset.trinitimedia.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/aset.trinitymedia.co.id/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/aset.trinitymedia.co.id/privkey.pem;
 
     location / {
         root /usr/share/nginx/html;
@@ -157,15 +168,15 @@ server {
 
 ## 6. Maintenance
 
-*   **Backup Database**:
-    ```bash
-    # Backup volume ./pgdata secara berkala atau gunakan pg_dump
-    docker exec -t [container_db_name] pg_dumpall -c -U [db_user] > dump_`date +%d-%m-%Y`.sql
-    ```
-*   **Renew SSL**:
-    ```bash
-    # Stop container web sebentar
-    docker compose stop web
-    sudo certbot renew
-    docker compose start web
-    ```
+- **Backup Database**:
+  ```bash
+  # Backup volume ./pgdata secara berkala atau gunakan pg_dump
+  docker exec -t [container_db_name] pg_dumpall -c -U [db_user] > dump_`date +%d-%m-%Y`.sql
+  ```
+- **Renew SSL**:
+  ```bash
+  # Stop container web sebentar
+  docker compose stop web
+  sudo certbot renew
+  docker compose start web
+  ```

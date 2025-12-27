@@ -1,4 +1,3 @@
-
 # Integrasi Pihak Ketiga: WhatsApp Gateway
 
 Dokumen ini menjelaskan prosedur teknis untuk menghubungkan sistem dengan layanan WhatsApp Gateway untuk notifikasi otomatis.
@@ -28,9 +27,9 @@ Proses ini hanya perlu dilakukan satu kali atau jika sesi terputus.
 2.  **Generate QR**:
     Pilih menu "Device" atau "Scan QR". Sebuah QR Code akan muncul di layar.
 3.  **Scan via HP**:
-    *   Buka WhatsApp di HP "Bot Pengirim".
-    *   Buka Menu (titik tiga) > **Linked Devices** (Perangkat Tertaut).
-    *   Klik **Link a Device** dan scan QR Code di dashboard provider.
+    - Buka WhatsApp di HP "Bot Pengirim".
+    - Buka Menu (titik tiga) > **Linked Devices** (Perangkat Tertaut).
+    - Klik **Link a Device** dan scan QR Code di dashboard provider.
 4.  **Verifikasi**:
     Pastikan status di dashboard berubah menjadi "Connected".
 
@@ -51,8 +50,8 @@ WA_GROUP_PURCHASE_ID=1203630xxxxxx@g.us
 
 ## 5. Troubleshooting Notifikasi
 
-*   **Pesan Tidak Masuk**:
-    *   Cek apakah HP Bot memiliki koneksi internet.
-    *   Cek apakah sesi WhatsApp Web di HP Bot terputus (Logout). Jika ya, lakukan scan ulang.
-*   **Format Pesan Berantakan**:
-    *   Pastikan fungsi `sanitize` di kode backend (`src/services/whatsappIntegration.ts`) berjalan untuk menghindari karakter yang merusak format markdown WhatsApp.
+- **Pesan Tidak Masuk**:
+  - Cek apakah HP Bot memiliki koneksi internet.
+  - Cek apakah sesi WhatsApp Web di HP Bot terputus (Logout). Jika ya, lakukan scan ulang.
+- **Format Pesan Berantakan**:
+  - Pastikan fungsi `sanitize` di kode backend (`src/services/whatsappIntegration.ts`) berjalan untuk menghindari karakter yang merusak format markdown WhatsApp.

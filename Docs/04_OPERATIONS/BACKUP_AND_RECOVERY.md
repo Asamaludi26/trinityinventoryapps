@@ -4,31 +4,34 @@ Dokumen ini menjelaskan prosedur standar untuk mencadangkan (backup) data aplika
 
 ## 1. Target Pemulihan
 
--   **RTO (Recovery Time Objective)**: Waktu maksimal yang ditargetkan untuk memulihkan layanan setelah bencana. **Target: < 2 jam**.
--   **RPO (Recovery Point Objective)**: Jumlah data maksimal yang bisa hilang (diukur dalam waktu). **Target: < 5 menit**.
+- **RTO (Recovery Time Objective)**: Waktu maksimal yang ditargetkan untuk memulihkan layanan setelah bencana. **Target: < 2 jam**.
+- **RPO (Recovery Point Objective)**: Jumlah data maksimal yang bisa hilang (diukur dalam waktu). **Target: < 5 menit**.
 
 ## 2. Strategi Backup
 
 ### 2.1. Objek Backup
--   **Target Utama**: Database **PostgreSQL** yang berisi semua data operasional.
--   **Target Sekunder**: File lampiran yang diunggah pengguna (jika disimpan di server).
+
+- **Target Utama**: Database **PostgreSQL** yang berisi semua data operasional.
+- **Target Sekunder**: File lampiran yang diunggah pengguna (jika disimpan di server).
 
 ### 2.2. Metode & Jadwal Backup
 
 1.  **Backup Penuh Harian (Daily Full Backup)**
-    -   **Metode**: Menggunakan `pg_dump` untuk membuat salinan logis lengkap dari seluruh database.
-    -   **Jadwal**: Dijalankan otomatis setiap hari pada jam 02:00 pagi.
+
+    - **Metode**: Menggunakan `pg_dump` untuk membuat salinan logis lengkap dari seluruh database.
+    - **Jadwal**: Dijalankan otomatis setiap hari pada jam 02:00 pagi.
 
 2.  **Point-in-Time Recovery (PITR)**
-    -   **Metode**: Menggunakan _Write-Ahead Logging_ (WAL) archiving.
-    -   **Tujuan**: Memungkinkan pemulihan ke titik waktu mana pun di antara dua backup penuh.
-    -   **RPO**: Kurang dari 5 menit.
+    - **Metode**: Menggunakan _Write-Ahead Logging_ (WAL) archiving.
+    - **Tujuan**: Memungkinkan pemulihan ke titik waktu mana pun di antara dua backup penuh.
+    - **RPO**: Kurang dari 5 menit.
 
 ## 3. Skrip Otomatisasi Backup
 
 Berikut adalah skrip shell (`backup.sh`) yang kompeten dan teruji untuk melakukan backup harian secara otomatis.
 
 **File**: `/opt/scripts/backup.sh`
+
 ```bash
 #!/bin/bash
 
@@ -55,7 +58,7 @@ TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${TIMESTAMP}.sql.gz"
 
 # S3 Bucket untuk penyimpanan off-site (ganti dengan bucket Anda)
-S3_BUCKET="s3://triniti-db-backups/assetflow"
+S3_BUCKET="s3://trinity-db-backups/assetflow"
 
 # Jumlah hari untuk menyimpan backup lokal
 RETENTION_DAYS=7
@@ -107,6 +110,7 @@ exit 0
 ```
 
 **File Konfigurasi**: `/opt/scripts/.env.db`
+
 ```
 DB_HOST=localhost
 DB_PORT=5432
@@ -116,6 +120,7 @@ DB_PASSWORD=<password_rahasia_anda>
 
 **Otomatisasi dengan `cron`**:
 Jalankan `sudo crontab -e` dan tambahkan baris berikut untuk menjalankan skrip setiap hari jam 2 pagi.
+
 ```
 0 2 * * * /bin/bash /opt/scripts/backup.sh
 ```
@@ -134,6 +139,7 @@ Jalankan `sudo crontab -e` dan tambahkan baris berikut untuk menjalankan skrip s
 Perintah ini digunakan untuk memulihkan database dari file backup yang telah dibuat.
 
 **Skenario 1: Memulihkan ke Database yang Benar-Benar Baru/Kosong**
+
 ```bash
 # Pastikan Anda sudah membuat database kosong terlebih dahulu
 # createdb -h HOST -p PORT -U USER new_database_name

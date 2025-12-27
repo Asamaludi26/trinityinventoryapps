@@ -3,7 +3,7 @@
 Dokumen ini menjelaskan blueprint arsitektural tingkat tinggi dari Aplikasi Inventori Aset. Tujuannya adalah untuk memberikan pemahaman konseptual tentang bagaimana komponen-komponen utama sistem saling terhubung dan berinteraksi.
 
 > **PENTING: Status Proyek Saat Ini**
-> Arsitektur yang dijelaskan dalam dokumen ini adalah **arsitektur target** untuk aplikasi *full-stack* yang lengkap. Implementasi saat ini adalah sebuah **prototipe frontend fungsional penuh**. Logika backend dan database disimulasikan menggunakan *mock API layer* yang berjalan di browser dan menyimpan data di `localStorage`. Manajemen state dan routing saat ini diimplementasikan secara sederhana dan merupakan area utama untuk peningkatan di fase produksi, seperti yang dijelaskan dalam [Panduan Frontend](../02_DEVELOPMENT_GUIDES/FRONTEND_GUIDE.md). Dokumen ini berfungsi sebagai cetak biru untuk tim backend dalam membangun layanan sisi server.
+> Arsitektur yang dijelaskan dalam dokumen ini adalah **arsitektur target** untuk aplikasi _full-stack_ yang lengkap. Implementasi saat ini adalah sebuah **prototipe frontend fungsional penuh**. Logika backend dan database disimulasikan menggunakan _mock API layer_ yang berjalan di browser dan menyimpan data di `localStorage`. Manajemen state dan routing saat ini diimplementasikan secara sederhana dan merupakan area utama untuk peningkatan di fase produksi, seperti yang dijelaskan dalam [Panduan Frontend](../02_DEVELOPMENT_GUIDES/FRONTEND_GUIDE.md). Dokumen ini berfungsi sebagai cetak biru untuk tim backend dalam membangun layanan sisi server.
 
 ---
 
@@ -11,10 +11,10 @@ Dokumen ini menjelaskan blueprint arsitektural tingkat tinggi dari Aplikasi Inve
 
 Aplikasi ini dirancang dengan arsitektur **Client-Server** yang modern dan terpisah (_decoupled_). Ini memungkinkan pengembangan, penskalaan, dan pemeliharaan yang independen antara antarmuka pengguna (Frontend) dan logika bisnis (Backend).
 
--   **Frontend (Client)**: Aplikasi React yang berjalan di browser pengguna. Bertanggung jawab penuh atas UI/UX, menampilkan data, dan menangkap input pengguna.
--   **Backend (Server)**: Aplikasi NestJS yang berjalan di server. Bertanggung jawab atas logika bisnis, validasi data, keamanan, dan interaksi dengan database.
--   **Database**: PostgreSQL sebagai penyimpan data persisten.
--   **Komunikasi**: Frontend dan Backend berkomunikasi melalui **REST API** yang aman menggunakan format JSON.
+- **Frontend (Client)**: Aplikasi React yang berjalan di browser pengguna. Bertanggung jawab penuh atas UI/UX, menampilkan data, dan menangkap input pengguna.
+- **Backend (Server)**: Aplikasi NestJS yang berjalan di server. Bertanggung jawab atas logika bisnis, validasi data, keamanan, dan interaksi dengan database.
+- **Database**: PostgreSQL sebagai penyimpan data persisten.
+- **Komunikasi**: Frontend dan Backend berkomunikasi melalui **REST API** yang aman menggunakan format JSON.
 
 Untuk detail teknologi yang digunakan, silakan lihat dokumen [**Tumpukan Teknologi**](./TECHNOLOGY_STACK.md).
 
@@ -30,7 +30,7 @@ Diagram ini menunjukkan gambaran besar: bagaimana sistem Aplikasi Inventori Aset
 
 ```mermaid
 graph TD
-    subgraph "Pengguna Internal PT. Triniti Media"
+    subgraph "Pengguna Internal PT. Trinity Media"
         A[<b>Staff / Leader</b><br>Karyawan yang membuat<br>request dan menggunakan aset]
         B[<b>Admin / Super Admin</b><br>Tim yang mengelola inventori<br>dan sistem]
     end
@@ -39,7 +39,7 @@ graph TD
 
     A -- "Menggunakan (via Web Browser)" --> C
     B -- "Mengelola (via Web Browser)" --> C
-    
+
     style A fill:#9f7aea,stroke:#333,stroke-width:2px
     style B fill:#9f7aea,stroke:#333,stroke-width:2px
     style C fill:#4299e1,stroke:#333,stroke-width:2px
@@ -58,7 +58,7 @@ graph TD
             F["<b>Aplikasi Frontend</b><br>[React Single-Page App]<br><br>Bertanggung jawab atas semua<br>antarmuka pengguna dan pengalaman<br>interaktif. Dijalankan di browser pengguna."]
             G["<b>API Backend</b><br>[Server NestJS]<br><br>Menyediakan REST API. Menangani<br>logika bisnis, autentikasi, otorisasi,<br>dan validasi data."]
         end
-        
+
         H["<b>Database</b><br>[PostgreSQL]<br><br>Penyimpanan data persisten untuk<br>semua entitas: aset, pengguna,<br>request, pelanggan, dll."]
     end
 
@@ -86,12 +86,14 @@ Komunikasi antara Frontend (ruang makan) dan Backend (dapur) terjadi melalui ser
 Bagian ini menjelaskan bagaimana komponen-komponen di atas akan di-deploy dan berinteraksi di lingkungan server produksi. Model ini menggunakan **Reverse Proxy** untuk menyajikan frontend dan backend di bawah satu domain tunggal, yang merupakan praktik industri terbaik untuk keamanan dan efisiensi.
 
 ### Konsep Utama
+
 - **Frontend**: Setelah proses _build_, aplikasi frontend menjadi sekumpulan file statis (HTML, CSS, JavaScript). File-file ini hanya perlu "disajikan" oleh web server.
 - **Backend**: Aplikasi backend adalah proses Node.js yang berjalan secara terus-menerus di server pada port internal (misalnya, `3001`).
 - **Nginx (Reverse Proxy)**: Bertindak sebagai "penerima tamu" atau gerbang utama. Nginx akan menerima semua permintaan dari pengguna dan secara cerdas memutuskan ke mana permintaan itu harus diteruskan.
 
 ### Alur Kerja di Produksi
-1. Pengguna mengakses domain utama (misal: `http://aset.trinitimedia.com`).
+
+1. Pengguna mengakses domain utama (misal: `http://aset.Trinitymedia.com`).
 2. Nginx menerima permintaan tersebut.
 3. **Jika permintaan adalah untuk API** (misalnya, `.../api/assets`), Nginx akan meneruskannya secara internal ke aplikasi backend yang berjalan di `localhost:3001`.
 4. **Jika permintaan BUKAN untuk API** (misalnya, halaman utama, gambar, CSS), Nginx akan menyajikan file statis dari direktori frontend.
@@ -99,13 +101,14 @@ Bagian ini menjelaskan bagaimana komponen-komponen di atas akan di-deploy dan be
 Dengan cara ini, dari sudut pandang pengguna, seluruh aplikasi tampak berjalan dari satu server tunggal, padahal di belakang layar ada dua aplikasi berbeda yang bekerja sama.
 
 **Diagram Alur Produksi:**
+
 ```mermaid
 graph TD
-    User[Pengguna] -- "HTTP Request ke aset.trinitimedia.com" --> Nginx
+    User[Pengguna] -- "HTTP Request ke aset.Trinitymedia.com" --> Nginx
 
-    subgraph "Server Produksi PT. Triniti"
+    subgraph "Server Produksi PT. Trinity"
         Nginx
-        
+
         subgraph "Aplikasi Backend (Berjalan via PM2)"
             Backend[Proses NestJS @ localhost:3001]
         end
@@ -114,7 +117,7 @@ graph TD
             Frontend[Direktori /var/www/assetflow/frontend]
         end
     end
-    
+
     Nginx -- "Jika request adalah '/api/*'" --> Backend
     Nginx -- "Jika request BUKAN '/api/*'" --> Frontend
     Backend -- "Berinteraksi dengan" --> DB[(Database PostgreSQL)]
@@ -182,6 +185,6 @@ sequenceDiagram
 
 Untuk detail implementasi yang lebih spesifik, silakan merujuk ke dokumen berikut:
 
--   [**Panduan Diagram Sistem**](./SYSTEM_DIAGRAMS.md)
--   [**Panduan Pengembangan Frontend**](../02_DEVELOPMENT_GUIDES/FRONTEND_GUIDE.md)
--   [**Panduan Pengembangan Backend**](../02_DEVELOPMENT_GUIDES/BACKEND_GUIDE.md)
+- [**Panduan Diagram Sistem**](./SYSTEM_DIAGRAMS.md)
+- [**Panduan Pengembangan Frontend**](../02_DEVELOPMENT_GUIDES/FRONTEND_GUIDE.md)
+- [**Panduan Pengembangan Backend**](../02_DEVELOPMENT_GUIDES/BACKEND_GUIDE.md)

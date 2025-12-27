@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================
-   TRINITY ASSET MANAGEMENT - DESIGN SYSTEM
+   Trinity ASSET MANAGEMENT - DESIGN SYSTEM
    Modern & Elegant Enterprise UI
    ============================================ */
 
@@ -470,3 +470,5 @@ td {
   background: var(--surface-raised);
   color: var(--text-secondary);
 }
+
+/* ===== LINK STYLES ===== */

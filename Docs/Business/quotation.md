@@ -9,7 +9,7 @@
   <h2 style="font-family: sans-serif; font-size: 24px; color: #1D4ED8; font-weight: 400;">PENGEMBANGAN APLIKASI INVENTORI ASET</h2>
   <br/><br/><br/>
   <p style="font-family: sans-serif; font-size: 18px; color: #374151;">Disiapkan untuk:</p>
-  <h3 style="font-family: sans-serif; font-size: 22px; color: #111827;">PT. TRINITI MEDIA INDONESIA</h3>
+  <h3 style="font-family: sans-serif; font-size: 22px; color: #111827;">PT. Trinity MEDIA INDONESIA</h3>
   <br/><br/><br/><br/><br/><br/><br/>
   <p style="font-family: sans-serif; font-size: 14px; color: #6B7280;">Nomor: Q-INV/AS/X/2025/001</p>
   <p style="font-family: sans-serif; font-size: 14px; color: #6B7280;">Tanggal: 1 Oktober 2025</p>
@@ -22,12 +22,12 @@
 
 <h3>1. Ringkasan Eksekutif</h3>
 <p>
-Proposal ini menguraikan penawaran untuk perancangan, pengembangan, dan implementasi **Aplikasi Inventori Aset**, sebuah solusi perangkat lunak berbasis web yang dirancang khusus untuk memenuhi kebutuhan PT. Triniti Media Indonesia. Visi kami adalah untuk mentransformasi proses manajemen aset manual yang ada saat ini menjadi sebuah sistem digital yang terpusat, efisien, dan transparan. Solusi ini akan memberikan visibilitas penuh atas seluruh siklus hidup aset, mulai dari permintaan pengadaan hingga penghapusan, yang pada akhirnya akan meningkatkan akuntabilitas, mengurangi risiko kehilangan, dan mengoptimalkan efisiensi operasional secara signifikan.
+Proposal ini menguraikan penawaran untuk perancangan, pengembangan, dan implementasi **Aplikasi Inventori Aset**, sebuah solusi perangkat lunak berbasis web yang dirancang khusus untuk memenuhi kebutuhan PT. Trinity Media Indonesia. Visi kami adalah untuk mentransformasi proses manajemen aset manual yang ada saat ini menjadi sebuah sistem digital yang terpusat, efisien, dan transparan. Solusi ini akan memberikan visibilitas penuh atas seluruh siklus hidup aset, mulai dari permintaan pengadaan hingga penghapusan, yang pada akhirnya akan meningkatkan akuntabilitas, mengurangi risiko kehilangan, dan mengoptimalkan efisiensi operasional secara signifikan.
 </p>
 
 <h3>2. Analisis Kebutuhan & Permasalahan</h3>
 <p>
-Berdasarkan diskusi awal, kami mengidentifikasi beberapa tantangan utama yang dihadapi PT. Triniti Media Indonesia:
+Berdasarkan diskusi awal, kami mengidentifikasi beberapa tantangan utama yang dihadapi PT. Trinity Media Indonesia:
 </p>
 <ul>
   <li><b>Kurangnya Sentralisasi Data:</b> Data aset tersebar di berbagai spreadsheet, membuatnya sulit untuk dilacak dan diaudit.</li>
@@ -106,7 +106,7 @@ Proyek ini akan dilaksanakan dalam model **pengembangan prototipe frontend fungs
 
 <h3>6. Investasi Proyek</h3>
 <p>
-Kami menawarkan model kerjasama **jual putus (*fixed price*)** untuk fase pengembangan prototipe frontend fungsional penuh. Model ini memberikan kepastian biaya bagi PT. Triniti Media Indonesia.
+Kami menawarkan model kerjasama **jual putus (*fixed price*)** untuk fase pengembangan prototipe frontend fungsional penuh. Model ini memberikan kepastian biaya bagi PT. Trinity Media Indonesia.
 </p>
 <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse;">
   <thead style="background-color: #F3F4F6;">
@@ -139,7 +139,7 @@ Kami menawarkan model kerjasama **jual putus (*fixed price*)** untuk fase pengem
 
 <h3>7. Deliverables (Hasil Akhir)</h3>
 <p>
-Setelah proyek selesai, PT. Triniti Media Indonesia akan menerima kepemilikan penuh atas:
+Setelah proyek selesai, PT. Trinity Media Indonesia akan menerima kepemilikan penuh atas:
 </p>
 <ul>
   <li><b>Aplikasi Frontend Fungsional Penuh</b> yang siap untuk didemonstrasikan.</li>
@@ -155,7 +155,7 @@ Kami memberikan **garansi teknis selama 90 hari** setelah serah terima proyek, y
 
 <h3>9. Penutup</h3>
 <p>
-Kami yakin bahwa solusi yang kami tawarkan akan menjadi aset digital yang sangat berharga bagi PT. Triniti Media Indonesia. Proposal ini berlaku selama 30 hari sejak tanggal dikeluarkan. Kami siap untuk berdiskusi lebih lanjut mengenai detail proyek ini.
+Kami yakin bahwa solusi yang kami tawarkan akan menjadi aset digital yang sangat berharga bagi PT. Trinity Media Indonesia. Proposal ini berlaku selama 30 hari sejak tanggal dikeluarkan. Kami siap untuk berdiskusi lebih lanjut mengenai detail proyek ini.
 </p>
 <br/><br/>
 <p>Hormat kami,</p>

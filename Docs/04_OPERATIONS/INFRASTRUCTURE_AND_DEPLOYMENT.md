@@ -11,39 +11,40 @@ Diagram ini menjelaskan bagaimana traffic mengalir dari internet publik masuk ke
 ```mermaid
 graph TD
     UserClient[User Browser / Mobile]
-    
+
     subgraph "Jaringan Publik (Internet)"
         DNS[Cloudflare / DNS Provider]
     end
-    
+
     subgraph "Infrastruktur Fisik (Proxmox Host)"
         Firewall[Proxmox Firewall / Mikrotik]
-        
+
         subgraph "Virtual Machine: AssetServer (IP: 192.168.x.x)"
             Nginx[Nginx Reverse Proxy :80/:443]
-            
+
             subgraph "Docker Network (Internal Bridge: 172.18.x.x)"
                 Backend[NestJS Container :3001]
                 DB[PostgreSQL Container :5432]
             end
-            
+
             Static[Frontend Static Files]
         end
     end
-    
+
     UserClient -->|HTTPS Request| DNS
     DNS -->|Public IP| Firewall
     Firewall -->|Port Forwarding 80/443| Nginx
-    
+
     Nginx -->|Route /api/*| Backend
     Nginx -->|Route /*| Static
     Backend -->|TCP Connection| DB
 ```
 
 **Poin Keamanan Kritis:**
-*   Database (`:5432`) dan Backend API (`:3001`) **TIDAK** diekspos ke jaringan host atau publik secara langsung. Mereka hanya bisa saling bicara di dalam Docker Network yang terisolasi.
-*   Hanya Nginx yang membuka port 80/443 ke dunia luar.
-*   Akses SSH menggunakan port custom (misal 9022) dan wajib menggunakan SSH Key (Disable Password Auth).
+
+- Database (`:5432`) dan Backend API (`:3001`) **TIDAK** diekspos ke jaringan host atau publik secara langsung. Mereka hanya bisa saling bicara di dalam Docker Network yang terisolasi.
+- Hanya Nginx yang membuka port 80/443 ke dunia luar.
+- Akses SSH menggunakan port custom (misal 9022) dan wajib menggunakan SSH Key (Disable Password Auth).
 
 ---
 
@@ -52,7 +53,8 @@ graph TD
 Panduan langkah demi langkah untuk tugas maintenance rutin dan troubleshooting.
 
 ### 2.1. Integrasi QEMU Guest Agent (Wajib untuk Proxmox)
-Agar Proxmox bisa memonitor penggunaan RAM/CPU VM secara akurat dan melakukan *graceful shutdown* (misal saat mati lampu dan UPS memicu shutdown), QEMU Agent harus aktif. Tanpa ini, snapshot backup mungkin tidak konsisten (file system corruption).
+
+Agar Proxmox bisa memonitor penggunaan RAM/CPU VM secara akurat dan melakukan _graceful shutdown_ (misal saat mati lampu dan UPS memicu shutdown), QEMU Agent harus aktif. Tanpa ini, snapshot backup mungkin tidak konsisten (file system corruption).
 
 1.  **Di dalam VM Ubuntu**:
     ```bash
@@ -62,14 +64,16 @@ Agar Proxmox bisa memonitor penggunaan RAM/CPU VM secara akurat dan melakukan *g
     sudo systemctl enable qemu-guest-agent
     ```
 2.  **Di Panel Proxmox**:
-    *   Klik VM > Options > QEMU Guest Agent > Ubah ke "Enabled".
-    *   Reboot VM.
-    *   Verifikasi: IP Address VM akan muncul di halaman Summary Proxmox.
+    - Klik VM > Options > QEMU Guest Agent > Ubah ke "Enabled".
+    - Reboot VM.
+    - Verifikasi: IP Address VM akan muncul di halaman Summary Proxmox.
 
 ### 2.2. Membersihkan Disk (Disk Cleanup)
+
 Docker sering meninggalkan image dan volume yang tidak terpakai ("dangling"), yang bisa memenuhi disk VM.
 
 **Prosedur Rutin (Bulanan):**
+
 ```bash
 # 1. Hapus container yang berhenti, network yang tidak dipakai, dan build cache
 docker system prune -f
@@ -83,9 +87,11 @@ df -h
 ```
 
 ### 2.3. Pemulihan Database (Database Restore)
+
 Jika terjadi korupsi data dan perlu restore dari file backup `.sql.gz`.
 
 **Langkah Restore:**
+
 1.  Stop aplikasi backend agar tidak ada data baru masuk selama proses restore.
     ```bash
     docker compose stop api
@@ -95,14 +101,14 @@ Jika terjadi korupsi data dan perlu restore dari file backup `.sql.gz`.
     # Unzip dulu jika .gz
     gunzip backup_file.sql.gz
     # Copy ke container
-    docker cp backup_file.sql triniti_asset_db:/tmp/restore.sql
+    docker cp backup_file.sql trinity_asset_db:/tmp/restore.sql
     ```
 3.  Eksekusi restore di dalam container.
     ```bash
     # Masuk ke container dan jalankan psql
-    docker exec -it triniti_asset_db psql -U triniti_admin -d triniti_asset -f /tmp/restore.sql
+    docker exec -it trinity_asset_db psql -U trinity_admin -d trinity_asset -f /tmp/restore.sql
     ```
-    *Catatan: Pastikan nama user (-U) dan database (-d) sesuai dengan .env.*
+    _Catatan: Pastikan nama user (-U) dan database (-d) sesuai dengan .env._
 4.  Start kembali aplikasi.
     ```bash
     docker compose start api
@@ -112,21 +118,23 @@ Jika terjadi korupsi data dan perlu restore dari file backup `.sql.gz`.
 
 ## 3. Cetak Biru Variabel Lingkungan (.env)
 
-Ini adalah daftar lengkap variabel yang **WAJIB** dikonfigurasi di server produksi (`/opt/triniti-app/.env`).
+Ini adalah daftar lengkap variabel yang **WAJIB** dikonfigurasi di server produksi (`/opt/trinity-app/.env`).
 
 ### Database Configuration
+
 ```env
 # Format: postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
 # Host 'db' merujuk pada nama service di docker-compose.yml
-DATABASE_URL="postgresql://triniti_admin:SuperS3cretP@ss!@db:5432/triniti_asset?schema=public"
+DATABASE_URL="postgresql://trinity_admin:SuperS3cretP@ss!@db:5432/trinity_asset?schema=public"
 
 # Digunakan oleh container postgres untuk inisialisasi awal
-POSTGRES_USER=triniti_admin
+POSTGRES_USER=trinity_admin
 POSTGRES_PASSWORD=SuperS3cretP@ss!
-POSTGRES_DB=triniti_asset
+POSTGRES_DB=trinity_asset
 ```
 
 ### Application Security
+
 ```env
 # Generate string acak panjang (misal: openssl rand -base64 64)
 JWT_SECRET="ganti_dengan_string_sangat_panjang_dan_acak_min_64_karakter"
@@ -142,6 +150,7 @@ PORT=3001
 ```
 
 ### Third-Party Integrations
+
 ```env
 # WhatsApp Gateway
 WA_API_URL="https://api.watzap.id/v1"
@@ -160,12 +169,14 @@ WA_GROUP_MANAGEMENT_ID="1203630239123@g.us"
 Untuk memastikan sistem berjalan normal tanpa harus login ke dashboard aplikasi.
 
 1.  **Cek Status Docker**:
+
     ```bash
     docker compose ps
     # Semua state harus "Up"
     ```
 
 2.  **Cek Log Realtime (Debugging Error 500)**:
+
     ```bash
     docker compose logs -f api --tail=100
     ```

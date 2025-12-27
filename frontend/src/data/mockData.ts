@@ -232,7 +232,7 @@ export const initialMockUsers: User[] = [
   {
     id: 1,
     name: "Super Admin User",
-    email: "super.admin@triniti.com",
+    email: "super.admin@trinitymedia.co.id",
     divisionId: 5,
     role: "Super Admin",
     permissions: SUPER_ADMIN_PERMISSIONS,
@@ -240,7 +240,7 @@ export const initialMockUsers: User[] = [
   {
     id: 2,
     name: "Admin Purchase User",
-    email: "purchase.admin@triniti.com",
+    email: "purchase.admin@trinitymedia.co.id",
     divisionId: 6,
     role: "Admin Purchase",
     permissions: ADMIN_PURCHASE_PERMISSIONS,
@@ -248,7 +248,7 @@ export const initialMockUsers: User[] = [
   {
     id: 3,
     name: "Admin Logistik User",
-    email: "logistik.admin@triniti.com",
+    email: "logistik.admin@trinitymedia.co.id",
     divisionId: 4,
     role: "Admin Logistik",
     permissions: ADMIN_LOGISTIK_PERMISSIONS,
@@ -256,7 +256,7 @@ export const initialMockUsers: User[] = [
   {
     id: 4,
     name: "Leader User",
-    email: "leader.user@triniti.com",
+    email: "leader.user@trinitymedia.co.id",
     divisionId: 1,
     role: "Leader",
     permissions: LEADER_PERMISSIONS,
@@ -264,7 +264,7 @@ export const initialMockUsers: User[] = [
   {
     id: 5,
     name: "Staff User",
-    email: "staff.user@triniti.com",
+    email: "staff.user@trinitymedia.co.id",
     divisionId: 3,
     role: "Staff",
     permissions: STAFF_PERMISSIONS,
@@ -272,7 +272,7 @@ export const initialMockUsers: User[] = [
   {
     id: 6,
     name: "Teknisi Lapangan A",
-    email: "teknisi.a@triniti.com",
+    email: "teknisi.a@trinitymedia.co.id",
     divisionId: 3,
     role: "Staff",
     permissions: STAFF_PERMISSIONS,
@@ -888,7 +888,8 @@ export const mockNotifications: Notification[] = [
     recipientId: 5, // Staff
     actorName: "System",
     type: "info",
-    message: "Selamat datang di Aplikasi Inventori Aset Triniti Media.",
+    message:
+      "Selamat datang di Aplikasi Inventori Aset Trinity Media Indonesia.",
     isRead: true,
     timestamp: d(-5),
   },

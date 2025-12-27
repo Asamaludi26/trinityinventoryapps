@@ -1,6 +1,6 @@
 # Dokumentasi Aplikasi Inventori Aset
 
-Selamat datang di pusat dokumentasi untuk Aplikasi Inventori Aset PT. Triniti Media Indonesia. Dokumen ini berfungsi sebagai gerbang utama untuk semua sumber daya, panduan, dan referensi yang berkaitan dengan proyek ini.
+Selamat datang di pusat dokumentasi untuk Aplikasi Inventori Aset PT. Trinity Media Indonesia. Dokumen ini berfungsi sebagai gerbang utama untuk semua sumber daya, panduan, dan referensi yang berkaitan dengan proyek ini.
 
 ## Deskripsi Singkat
 

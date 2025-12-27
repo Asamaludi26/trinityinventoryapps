@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import { TrinitiLogoIcon } from "../../components/icons/TrinitiLogoIcon";
+import { TrinityLogoIcon } from "../../components/icons/TrinityLogoIcon";
 import { SpinnerIcon } from "../../components/icons/SpinnerIcon";
 import type { User } from "../../types";
 import Modal from "../../components/ui/Modal";
@@ -123,12 +123,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
-                <TrinitiLogoIcon className="w-10 h-10 text-tm-accent" />
+              <div className="backdrop-blur-sm">
+                <TrinityLogoIcon className="w-20 h-20 text-tm-accent" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">
-                  Triniti
+                  Trinity
                   <span className="font-normal text-slate-300">Asset</span>
                 </h1>
                 <p className="text-xs text-slate-400 uppercase tracking-wider font-medium">
@@ -182,7 +182,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
             {/* Footer */}
             <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} PT. Triniti Media Indonesia
+              © {new Date().getFullYear()} PT. Trinity Media Indonesia
             </p>
           </div>
         </div>
@@ -193,10 +193,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             {/* Mobile logo */}
             <div className="flex flex-col items-center justify-center mb-8 lg:hidden">
               <div className="p-4 bg-tm-primary-light rounded-2xl mb-4">
-                <TrinitiLogoIcon className="w-12 h-12 text-tm-primary" />
+                <TrinityLogoIcon className="w-12 h-12 text-tm-primary" />
               </div>
               <h1 className="text-2xl font-bold text-slate-900">
-                Triniti<span className="font-normal text-slate-500">Asset</span>
+                Trinity<span className="font-normal text-slate-500">Asset</span>
               </h1>
               <p className="text-sm text-slate-500 mt-1">
                 Sistem Manajemen Inventori
@@ -232,7 +232,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full h-12 px-4 text-slate-900 placeholder-slate-400 bg-slate-50 border border-slate-300 rounded-xl shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-tm-accent/30 focus:border-tm-accent hover:border-slate-400"
-                    placeholder="anda@triniti.com"
+                    placeholder="anda@trinitymedia.co.id"
                   />
                 </div>
 
@@ -350,7 +350,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
             {/* Footer for mobile */}
             <p className="mt-8 text-xs text-center text-slate-400 lg:hidden">
-              © {new Date().getFullYear()} PT. Triniti Media Indonesia
+              © {new Date().getFullYear()} PT. Trinity Media Indonesia
             </p>
           </div>
         </div>
