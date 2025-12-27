@@ -173,3 +173,243 @@ Semua endpoint harus mengembalikan format yang konsisten:
     *   Tabel `ActivityLog` bersifat *Append-Only*.
     *   Tidak boleh ada endpoint API `DELETE` atau `UPDATE` untuk tabel ini.
     *   Hanya Database Admin level root yang bisa menghapus log (untuk maintenance/archiving/pruning data tua).
+
+---
+
+## 5. Error Handling Strategy
+
+### 5.1. Global Exception Filter
+
+Backend harus memiliki global exception filter untuk menangani semua error secara konsisten:
+
+```typescript
+// backend/src/common/filters/http-exception.filter.ts
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import { Request, Response } from 'express';
+
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+
+    const status = exception instanceof HttpException
+      ? exception.getStatus()
+      : 500;
+
+    const message = exception instanceof HttpException
+      ? exception.getMessage()
+      : 'Internal server error';
+
+    // Log error (tidak expose detail ke client)
+    console.error('Error:', {
+      status,
+      message,
+      path: request.url,
+      method: request.method,
+      timestamp: new Date().toISOString(),
+    });
+
+    response.status(status).json({
+      statusCode: status,
+      message,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    });
+  }
+}
+```
+
+### 5.2. Frontend Error Handling
+
+Frontend harus menangani error dengan user-friendly messages:
+
+```typescript
+// frontend/src/services/api.ts
+const handleError = (error: any) => {
+  const userFriendlyMessages: Record<number, string> = {
+    400: 'Data yang Anda masukkan tidak valid',
+    401: 'Sesi Anda telah berakhir, silakan login kembali',
+    403: 'Anda tidak memiliki akses untuk melakukan aksi ini',
+    404: 'Data tidak ditemukan',
+    409: 'Data yang Anda coba simpan sudah digunakan',
+    500: 'Terjadi kesalahan server, silakan coba lagi',
+    503: 'Layanan sedang tidak tersedia, silakan coba lagi nanti',
+  };
+
+  const message = userFriendlyMessages[error.status] || 'Terjadi kesalahan';
+  useNotificationStore.getState().addToast(message, 'error');
+  
+  if (error.status === 401) {
+    useAuthStore.getState().logout();
+    window.location.href = '/';
+  }
+};
+```
+
+---
+
+## 6. Performance Optimization
+
+### 6.1. Database Query Optimization
+
+- **Indexing**: Pastikan semua foreign keys dan kolom yang sering di-query memiliki index
+- **Eager Loading**: Gunakan Prisma `include` untuk menghindari N+1 queries
+- **Pagination**: Selalu gunakan pagination untuk list endpoints
+- **Selective Fields**: Hanya select field yang diperlukan
+
+### 6.2. Frontend Optimization
+
+- **Code Splitting**: Lazy load routes dan components
+- **Memoization**: Gunakan `useMemo` dan `useCallback` untuk expensive computations
+- **Virtual Scrolling**: Untuk list yang sangat panjang
+- **Image Optimization**: Compress dan lazy load images
+- **Caching**: Cache API responses di Zustand store
+
+### 6.3. API Response Caching
+
+```typescript
+// Backend: Cache frequently accessed data
+@UseInterceptors(CacheInterceptor)
+@CacheTTL(300) // 5 minutes
+@Get('/api/assets')
+async getAssets() {
+  return this.assetsService.findAll();
+}
+```
+
+---
+
+## 7. Testing Strategy
+
+### 7.1. Unit Tests
+
+- **Coverage Target**: Minimal 70% untuk business logic
+- **Focus Areas**: Services, utilities, business rules
+- **Tools**: Jest untuk backend, Vitest untuk frontend
+
+### 7.2. Integration Tests
+
+- **API Endpoints**: Test semua endpoint dengan real database (test DB)
+- **Database Transactions**: Test atomic operations
+- **Tools**: Supertest untuk backend API testing
+
+### 7.3. E2E Tests
+
+- **Critical Paths**: Login, Create Request, Approve Request, Register Asset
+- **Tools**: Cypress atau Playwright
+- **Coverage**: Minimal 5-10 critical user flows
+
+---
+
+## 8. Monitoring & Observability
+
+### 8.1. Application Metrics
+
+Track metrics berikut:
+- Request rate (requests per second)
+- Response time (p50, p95, p99)
+- Error rate (4xx, 5xx)
+- Database query time
+- Active users
+
+### 8.2. Business Metrics
+
+- Total assets
+- Request approval time
+- Asset utilization rate
+- Maintenance frequency
+- Customer satisfaction (jika ada feedback)
+
+### 8.3. Logging Strategy
+
+- **Structured Logging**: Semua log dalam format JSON
+- **Log Levels**: ERROR, WARN, INFO, DEBUG
+- **Log Aggregation**: Centralized logging system (ELK, Loki, dll)
+- **Retention**: Minimal 30 hari untuk production logs
+
+---
+
+## 9. Deployment Strategy
+
+### 9.1. CI/CD Pipeline
+
+```mermaid
+graph LR
+    Code[Code Commit] --> Build[Build & Test]
+    Build --> Test[Run Tests]
+    Test -->|Pass| BuildImage[Build Docker Image]
+    BuildImage --> Push[Push to Registry]
+    Push --> Deploy[Deploy to Server]
+    Deploy --> Verify[Health Check]
+    Verify -->|Fail| Rollback[Rollback]
+    Verify -->|Pass| Complete[Deployment Complete]
+```
+
+### 9.2. Deployment Steps
+
+1. **Build**: Compile TypeScript, run tests
+2. **Docker Build**: Build production Docker images
+3. **Push**: Push images to container registry
+4. **Deploy**: Pull images di server, run migrations
+5. **Health Check**: Verify semua services running
+6. **Rollback**: Jika health check gagal, rollback ke versi sebelumnya
+
+### 9.3. Zero-Downtime Deployment
+
+- **Strategy**: Blue-Green atau Rolling Update
+- **Database Migrations**: Run migrations sebelum deploy new version
+- **Health Checks**: Verify sebelum switch traffic
+- **Rollback Plan**: Siapkan rollback procedure
+
+---
+
+## 10. Scalability Considerations
+
+### 10.1. Horizontal Scaling
+
+- **Stateless Backend**: Backend harus stateless untuk memungkinkan multiple instances
+- **Load Balancer**: Nginx sebagai load balancer
+- **Database**: PostgreSQL dengan read replicas jika diperlukan
+
+### 10.2. Vertical Scaling
+
+- **Resource Monitoring**: Monitor CPU, RAM, disk usage
+- **Auto-scaling**: (Future) Auto-scale berdasarkan load
+- **Database Optimization**: Query optimization, indexing
+
+### 10.3. Caching Strategy
+
+- **API Response Cache**: Cache untuk data yang jarang berubah
+- **Database Query Cache**: Cache untuk expensive queries
+- **CDN**: (Future) Untuk static assets
+
+---
+
+## 11. Disaster Recovery
+
+### 11.1. Backup Strategy
+
+- **Database**: Daily full backup + WAL archiving
+- **Application Code**: Version control (Git)
+- **Configuration**: Encrypted backup di secure location
+
+### 11.2. Recovery Procedures
+
+- **RTO (Recovery Time Objective)**: < 2 jam
+- **RPO (Recovery Point Objective)**: < 5 menit
+- **Test Restore**: Test restore procedure quarterly
+
+---
+
+## 12. References
+
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [React Best Practices](https://react.dev/learn)
+- [PostgreSQL Performance Tuning](https://www.postgresql.org/docs/current/performance-tips.html)
+
+---
+
+**Last Updated**: 2025-01-XX

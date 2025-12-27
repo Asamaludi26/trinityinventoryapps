@@ -1,0 +1,65 @@
+# ============================================
+# Backend .dockerignore
+# ============================================
+
+# Dependencies (will be installed in container)
+node_modules/
+.pnp
+.pnp.js
+
+# Build output (will be built in container)
+dist/
+build/
+*.tsbuildinfo
+
+# Tests
+test/
+tests/
+*.test.ts
+*.spec.ts
+coverage/
+.nyc_output/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Prisma (keep schema, ignore migrations in build)
+# prisma/migrations/ (uncomment if migrations run separately)
+
+# Temporary
+*.tmp
+*.temp
+.cache/
+

@@ -1,28 +1,315 @@
+# ============================================
+# Trinity Inventory Apps - Comprehensive .gitignore
+# Production-ready gitignore for monorepo
+# ============================================
+
+# ============================================
+# Dependencies
+# ============================================
+node_modules/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# ============================================
+# Build Outputs
+# ============================================
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.vite/
+*.tsbuildinfo
+
+# Frontend build
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.next/
+
+# Backend build
+backend/dist/
+backend/build/
+
+# ============================================
+# Environment Variables
+# ============================================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+.env.staging.local
+
+# ============================================
 # Logs
-logs
+# ============================================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
-.env.local
-.env.*.local
+*.log.*
 
+# ============================================
+# Database
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
 
-node_modules
-dist
-dist-ssr
-*.local
+# PostgreSQL
+*.sql.gz
+*.sql.backup
+*.dump
+pgdata/
+postgres-data/
+data/
 
-# Editor directories and files
+# Prisma
+backend/prisma/migrations/*.sql
+!backend/prisma/migrations/migration_lock.toml
+
+# ============================================
+# Docker
+# ============================================
+.docker/
+docker-compose.override.yml
+*.dockerignore.local
+
+# Docker volumes
+volumes/
+pgdata/
+mysql-data/
+redis-data/
+
+# ============================================
+# IDE & Editors
+# ============================================
+# VSCode
 .vscode/*
 !.vscode/extensions.json
-.idea
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# IntelliJ IDEA / WebStorm
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ============================================
+# OS Files
+# ============================================
+# macOS
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# Testing
+# ============================================
+coverage/
+.nyc_output/
+*.lcov
+.jest/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ============================================
+# Temporary Files
+# ============================================
+*.tmp
+*.temp
+*.cache
+.cache/
+.temp/
+.tmp/
+*.swp
+*.swo
+*~
+
+# ============================================
+# Backup Files
+# ============================================
+*.backup
+*.bak
+*.old
+*.orig
+*.save
+*.sav
+*_backup
+*_backup_*
+
+# ============================================
+# Package Manager
+# ============================================
+# npm
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# pnpm
+.pnpm-store/
+.pnpm-debug.log*
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# ============================================
+# TypeScript
+# ============================================
+*.tsbuildinfo
+.tsbuildinfo
+
+# ============================================
+# ESLint & Prettier
+# ============================================
+.eslintcache
+.prettiercache
+
+# ============================================
+# Storybook
+# ============================================
+storybook-static/
+.out/
+
+# ============================================
+# Misc
+# ============================================
+# Local development
+.local/
+.localenv
+
+# Secrets & Keys
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+secrets/
+.secrets/
+
+# SSL Certificates (except examples)
+*.pem
+*.key
+!*.example.pem
+!*.example.key
+
+# Application specific
+uploads/
+temp/
+tmp/
+storage/
+public/uploads/
+public/storage/
+
+# ============================================
+# Production Specific
+# ============================================
+# Backup files
+backups/
+*.backup
+*.sql.gz
+*.dump
+
+# Log files
+logs/
+*.log
+*.log.*
+
+# Database dumps
+*.sql
+!schema.sql
+!seed.sql
+
+# ============================================
+# Documentation Build
+# ============================================
+docs/.vuepress/dist/
+docs/.vitepress/dist/
+site/
+
+# ============================================
+# Lock Files (Optional - uncomment if needed)
+# ============================================
+# Uncomment if you want to ignore lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ============================================
+# Custom Application Files
+# ============================================
+# Add project-specific ignores here
+frontend/BUG_ANALYSIS.md.bak
+*.local

@@ -5,23 +5,263 @@ Dokumen ini menjelaskan struktur fisik database yang akan diimplementasikan meng
 
 ## 1. Ringkasan ERD (Entity Relationship Diagram)
 
+### 1.1. ERD Lengkap - Semua Entitas & Relasi
+
 ```mermaid
 erDiagram
+    %% User Management
+    Division ||--o{ User : "has"
     User ||--o{ Request : "makes"
     User ||--o{ LoanRequest : "makes"
     User ||--o{ ActivityLog : "performs"
-    Division ||--o{ User : "has"
+    User ||--o{ Maintenance : "reports"
     
-    Asset }|--|| AssetCategory : "belongs to"
-    Asset }|--|| AssetType : "classified as"
-    Asset ||--o{ ActivityLog : "has history"
+    %% Asset Hierarchy
+    AssetCategory ||--o{ AssetType : "contains"
+    AssetType ||--o{ Asset : "classifies"
+    Asset ||--o{ ActivityLog : "has_history"
     Asset ||--o{ Maintenance : "undergoes"
+    Asset ||--o{ HandoverItem : "transferred_in"
+    Asset ||--o{ Dismantle : "retrieved_in"
+    Asset ||--o{ Installation : "installed_in"
+    Asset ||--o{ LoanItem : "loaned_in"
     
+    %% Request & Procurement
     Request ||--|{ RequestItem : "contains"
-    LoanRequest ||--|{ LoanItem : "contains"
+    Request }o--|| User : "requested_by"
     
-    Handover ||--|{ HandoverItem : "transfers"
-    Dismantle ||--|| Asset : "retrieves"
+    %% Loan Management
+    LoanRequest ||--|{ LoanItem : "contains"
+    LoanRequest }o--|| User : "requested_by"
+    LoanRequest ||--o| Handover : "fulfilled_by"
+    
+    %% Handover
+    Handover ||--|{ HandoverItem : "contains"
+    Handover }o--|| User : "handed_to"
+    
+    %% Dismantle
+    Dismantle }o--|| Asset : "retrieves"
+    Dismantle }o--|| Customer : "from_customer"
+    
+    %% Installation
+    Installation }o--|| Customer : "at_customer"
+    Installation ||--|{ InstallationItem : "contains"
+    
+    %% Customer Management
+    Customer ||--o{ Installation : "has"
+    Customer ||--o{ Dismantle : "has"
+    Customer ||--o{ Maintenance : "has"
+    
+    %% Maintenance
+    Maintenance }o--|| Asset : "for_asset"
+    Maintenance }o--|| User : "reported_by"
+    
+    Division {
+        int id PK
+        string name UK
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    User {
+        int id PK
+        string email UK
+        string password
+        string name
+        string role
+        int divisionId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+    
+    AssetCategory {
+        int id PK
+        string name
+        boolean isCustomerInstallable
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    AssetType {
+        int id PK
+        int categoryId FK
+        string name
+        string classification
+        string trackingMethod
+        string unitOfMeasure
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Asset {
+        string id PK
+        string name
+        string brand
+        string serialNumber
+        string macAddress
+        int typeId FK
+        string status
+        string condition
+        string location
+        string currentUser
+        decimal purchasePrice
+        datetime purchaseDate
+        string vendor
+        datetime warrantyEndDate
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+    
+    Request {
+        string id PK
+        int requesterId FK
+        string division
+        string status
+        datetime requestDate
+        string orderType
+        string justification
+        string project
+        string logisticApprover
+        string finalApprover
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    RequestItem {
+        int id PK
+        string requestId FK
+        string itemName
+        int quantity
+        int approvedQty
+        string poNumber
+        decimal price
+        string vendor
+    }
+    
+    LoanRequest {
+        string id PK
+        int requesterId FK
+        string status
+        datetime requestDate
+        datetime loanStartDate
+        datetime loanEndDate
+        string purpose
+    }
+    
+    LoanItem {
+        int id PK
+        string loanRequestId FK
+        string assetId FK
+        string status
+    }
+    
+    Handover {
+        string id PK
+        int userId FK
+        string loanRequestId FK
+        string status
+        datetime handoverDate
+        string notes
+    }
+    
+    HandoverItem {
+        int id PK
+        string handoverId FK
+        string assetId FK
+        string condition
+    }
+    
+    Customer {
+        int id PK
+        string name
+        string address
+        string phone
+        string email
+        string status
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    Installation {
+        int id PK
+        int customerId FK
+        string status
+        datetime installationDate
+        string technician
+        string notes
+    }
+    
+    InstallationItem {
+        int id PK
+        int installationId FK
+        string assetId FK
+        string serialNumber
+        string macAddress
+    }
+    
+    Dismantle {
+        int id PK
+        int customerId FK
+        string assetId FK
+        string status
+        datetime dismantleDate
+        string condition
+        string technician
+        string notes
+    }
+    
+    Maintenance {
+        int id PK
+        string assetId FK
+        int reportedById FK
+        int customerId FK
+        string status
+        string type
+        string description
+        decimal cost
+        datetime reportedDate
+        datetime completedDate
+    }
+    
+    ActivityLog {
+        int id PK
+        string assetId FK
+        int userId FK
+        string action
+        json details
+        datetime timestamp
+    }
+```
+
+### 1.2. ERD Simplified - Core Entities
+
+Diagram ini menunjukkan entitas inti dan relasi utama:
+
+```mermaid
+erDiagram
+    User ||--o{ Request : creates
+    User ||--o{ LoanRequest : creates
+    Division ||--o{ User : contains
+    
+    AssetCategory ||--o{ AssetType : has
+    AssetType ||--o{ Asset : classifies
+    
+    Request ||--|{ RequestItem : contains
+    LoanRequest ||--|{ LoanItem : contains
+    LoanRequest ||--o| Handover : fulfilled_by
+    
+    Asset ||--o{ LoanItem : loaned_in
+    Asset ||--o{ HandoverItem : transferred_in
+    Asset ||--o{ InstallationItem : installed_in
+    Asset ||--o{ Dismantle : retrieved_in
+    Asset ||--o{ Maintenance : requires
+    Asset ||--o{ ActivityLog : tracked_in
+    
+    Customer ||--o{ Installation : has
+    Customer ||--o{ Dismantle : has
+    Customer ||--o{ Maintenance : has
 ```
 
 ## 2. Definisi Model (Prisma Schema)

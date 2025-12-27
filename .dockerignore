@@ -1,0 +1,65 @@
+# ============================================
+# Root .dockerignore
+# ============================================
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+Docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Tests
+test/
+tests/
+*.test.ts
+*.spec.ts
+coverage/
+
+# Build artifacts (will be built in container)
+dist/
+build/
+node_modules/
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Scripts (keep only deployment scripts if needed)
+scripts/
+!scripts/deploy.sh
+
+# Temporary
+*.tmp
+*.temp
+.cache/
+

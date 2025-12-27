@@ -1,5 +1,11 @@
 # Panduan Deployment: Docker & Proxmox
 
+> **📌 PANDUAN LENGKAP TERSEDIA**: Untuk deployment ke **Debian 13 di Proxmox VM**, gunakan panduan lengkap di **[DEPLOYMENT_DEBIAN13_PROXMOX.md](./DEPLOYMENT_DEBIAN13_PROXMOX.md)** yang mencakup semua langkah detail dari awal hingga akhir.
+>
+> **🚀 QUICK START**: Jika Anda sudah familiar dengan Docker dan hanya perlu panduan cepat, lihat **[QUICK_START_DEPLOYMENT.md](./QUICK_START_DEPLOYMENT.md)**.
+
+---
+
 Dokumen ini diperbarui untuk merekomendasikan penggunaan **Docker** sebagai metode deployment utama. Ini adalah cara termudah dan paling stabil untuk menjalankan aplikasi Full-Stack di server Linux (termasuk VM di Proxmox).
 
 ## 1. Konsep Deployment
