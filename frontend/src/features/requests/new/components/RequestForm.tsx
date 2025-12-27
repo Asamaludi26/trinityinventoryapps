@@ -121,11 +121,10 @@ export const RequestForm: React.FC<RequestFormProps> = ({
     const savedDraft = localStorage.getItem(userDraftKey);
 
     if (savedDraft && !prefillItem) {
-      // FIXED C2: Use safeParseJSON utility instead of unsafe JSON.parse
       try {
         const parsed = JSON.parse(savedDraft);
-        // Validate parsed data structure
-        if (!parsed || typeof parsed !== 'object') {
+        // Validate parsed data structure before accessing properties
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
           console.error('Invalid draft data structure');
           localStorage.removeItem(userDraftKey);
           handleAddItem();

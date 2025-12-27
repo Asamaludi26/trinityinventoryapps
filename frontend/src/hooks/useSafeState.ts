@@ -26,7 +26,6 @@ export function useSafeState<T>(initialValue: T) {
 
 /**
  * Hook to safely execute async operations with cleanup
- * FIXED C7: Improved cleanup to prevent memory leaks
  */
 export function useSafeAsync<T>(
   asyncFn: () => Promise<T>,
@@ -67,7 +66,7 @@ export function useSafeAsync<T>(
     executeAsync();
 
     return () => {
-      // FIXED C7: Proper cleanup - abort ongoing operations and mark as unmounted
+      // Proper cleanup - abort ongoing operations and mark as unmounted
       isMountedRef.current = false;
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();

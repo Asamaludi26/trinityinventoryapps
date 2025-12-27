@@ -115,9 +115,7 @@ export const CategoryBarChart: React.FC<BarChartProps> = ({ assets, categories }
         return counts.sort((a, b) => b.value - a.value).slice(0, 5);
     }, [assets, categories]);
 
-    // FIXED C3 & m4: Safe Math.max with constant for default value
-    const DEFAULT_MAX_VALUE = 1;
-    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.value), DEFAULT_MAX_VALUE) : DEFAULT_MAX_VALUE;
+    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.value), 1) : 1;
 
     return (
         <div className="flex flex-col justify-between h-full space-y-5">
@@ -154,9 +152,7 @@ interface SpendingChartProps {
 export const SpendingTrendChart: React.FC<SpendingChartProps> = ({ data }) => {
     if (data.length === 0) return <p className="text-center text-sm text-gray-400 my-auto">Belum ada data pembelian.</p>;
 
-    // FIXED C3 & m4: Safe Math.max with constant for default value
-    const DEFAULT_MAX_VALUE = 1;
-    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.value), DEFAULT_MAX_VALUE) : DEFAULT_MAX_VALUE;
+    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.value), 1) : 1;
     const points = data.map((d, i) => {
         const x = (i / (data.length - 1)) * 100;
         const y = 100 - (d.value / maxValue) * 100;
@@ -210,9 +206,7 @@ interface TechLeaderboardProps {
 }
 
 export const TechnicianLeaderboard: React.FC<TechLeaderboardProps> = ({ data }) => {
-    // FIXED C3 & m4: Safe Math.max with constant for default value
-    const DEFAULT_MAX_VALUE = 1;
-    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.count), DEFAULT_MAX_VALUE) : DEFAULT_MAX_VALUE;
+    const maxValue = Math.max(...data.map(d => d.count), 1);
     const colors = ['bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-rose-500'];
 
     return (

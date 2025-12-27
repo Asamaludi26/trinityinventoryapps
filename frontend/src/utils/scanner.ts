@@ -13,7 +13,7 @@ export const parseScanData = (data: string): ParsedScanResult => {
     // 1. Try to parse as "Smart QR" JSON
     try {
         const jsonData = JSON.parse(raw);
-        // FIXED C2: Validate JSON structure before accessing properties
+        // Validate JSON structure before accessing properties
         if (jsonData && typeof jsonData === 'object' && jsonData.type === 'asset' && (jsonData.id || jsonData.sn || jsonData.mac)) {
             result.id = jsonData.id;
             result.serialNumber = jsonData.sn;
@@ -24,8 +24,7 @@ export const parseScanData = (data: string): ParsedScanResult => {
             return result;
         }
     } catch (e) {
-        // Not a JSON or invalid JSON, continue to other parsing methods
-        // No need to log as this is expected behavior for non-JSON inputs
+        // Not a JSON, continue
     }
 
     // 2. Try to parse as key-value pairs (e.g., "SN:123, MAC:ABC")

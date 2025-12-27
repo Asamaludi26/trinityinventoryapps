@@ -74,7 +74,7 @@ const LoanRequestDetailPage: React.FC<LoanRequestDetailPageProps> = (props) => {
 
     const handleDownloadPdf = () => {
         if (!printRef.current) return;
-        // FIXED C5: Add type guard for window object properties
+        // Add type guard for window object properties
         if (typeof (window as any).jspdf === 'undefined' || typeof (window as any).html2canvas === 'undefined') {
             addNotification('Library PDF tidak tersedia. Pastikan jsPDF dan html2canvas sudah dimuat.', 'error');
             return;

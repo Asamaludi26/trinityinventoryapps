@@ -35,7 +35,6 @@ const TimelineStep: React.FC<{
 
 export const ProcurementProgressCard: React.FC<{ request: Request, assets: Asset[] }> = ({ request, assets }) => {
     const registeredAssets = assets.filter(a => a.poNumber === request.id || a.woRoIntNumber === request.id);
-    // FIXED C3: Safe Math.max - validate array and dates before using Math.max
     const lastRegistrationDate = registeredAssets.length > 0 && request.isRegistered
         ? (() => {
             const validDates = registeredAssets
@@ -75,7 +74,6 @@ export const ProcurementProgressCard: React.FC<{ request: Request, assets: Asset
     const steps = [
         { status: ItemStatus.APPROVED, label: 'Disetujui', icon: CheckIcon, date: request.finalApprovalDate },
         { status: ItemStatus.PURCHASING, label: 'Pengadaan', icon: ShoppingCartIcon, date: request.purchaseDetails ? (() => {
-            // FIXED C3: Safe Math.max - validate dates before using Math.max
             const validDates = Object.values(request.purchaseDetails)
                 .map((d: PurchaseDetails) => new Date(d.purchaseDate).getTime())
                 .filter(time => !isNaN(time) && isFinite(time));

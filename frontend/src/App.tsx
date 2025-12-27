@@ -7,7 +7,6 @@ import {
   Request,
   LoanRequest,
   AssetReturn,
-  UserRole,
 } from "./types";
 
 // Providers
@@ -218,15 +217,9 @@ const AppContent: React.FC = () => {
     "kategori",
   ];
 
-  // FIXED M12: Type guard for user role checks
-  const isStaffRole = (role: UserRole): role is "Staff" | "Leader" => {
-    return role === "Staff" || role === "Leader";
-  };
-
   const renderPage = () => {
-    // FIXED M12: Use type guard for safer role checking
     if (
-      isStaffRole(currentUser.role) &&
+      (currentUser.role === "Staff" || currentUser.role === "Leader") &&
       staffRestrictedPages.includes(activePage)
     ) {
       return <PermissionDeniedPage />;
@@ -580,12 +573,19 @@ const App: React.FC = () => {
   }
 
   if (!currentUser) {
-    // FIXED C5: Remove unsafe type casting, use proper type
+    // LoginPage handles login internally via useAuthStore (loginStore)
+    // The onLogin prop is called after successful login, but since loginStore already
+    // handles everything, we just return the user from the store to avoid duplicate API calls
     return (
       <LoginPage
         onLogin={async () => {
-          // This is a placeholder - actual login handled by LoginPage component
-          throw new Error("Login should be handled by LoginPage component");
+          // Login is already handled by LoginPage internally via loginStore
+          // Return the user from the store (already set by loginStore) to satisfy the interface
+          const user = useAuthStore.getState().currentUser;
+          if (!user) {
+            throw new Error("Login failed");
+          }
+          return user;
         }}
       />
     );

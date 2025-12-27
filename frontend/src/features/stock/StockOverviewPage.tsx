@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Asset, AssetStatus, Page, PreviewData, User, AssetCondition, StockMovement } from '../../types';
 import { useSortableData, SortConfig } from '../../hooks/useSortableData';
 import { PaginationControls } from '../../components/ui/PaginationControls';
@@ -349,7 +349,7 @@ const StockOverviewPage: React.FC<StockOverviewPageProps> = ({ currentUser, setA
         setThresholds(prev => ({ ...prev, [key]: newThreshold }));
     };
 
-    // FIXED M7: Use useRef to track if filters have been applied to prevent infinite loop
+    // Use useRef to track if filters have been applied to prevent infinite loop
     const filtersAppliedRef = useRef(false);
     
     useEffect(() => {
@@ -361,7 +361,7 @@ const StockOverviewPage: React.FC<StockOverviewPageProps> = ({ currentUser, setA
             onClearInitialFilters();
         }
     }, [initialFilters, onClearInitialFilters]);
-    
+
     // Reset ref when initialFilters changes
     useEffect(() => {
         filtersAppliedRef.current = false;

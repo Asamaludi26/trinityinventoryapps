@@ -146,15 +146,11 @@ export const useRequestStore = create<RequestState>((set, get) => ({
     await api.updateData('app_requests', updated);
     set({ requests: updated });
     
-    // FIXED M6: Ensure updatedReq exists before accessing properties
     if (data.status && data.status !== originalRequest.status) {
         const updatedReq = updated.find(r => r.id === id);
         if (updatedReq && data.status === ItemStatus.LOGISTIC_APPROVED) {
             const waPayload = WhatsAppService.generateLogisticApprovalPayload(updatedReq, data.logisticApprover || 'Admin');
             triggerWAModal(waPayload);
-        } else if (!updatedReq) {
-            console.error('Updated request not found after update:', id);
-            useNotificationStore.getState().addToast('Gagal memperbarui request. Data tidak ditemukan.', 'error');
         }
     }
   },

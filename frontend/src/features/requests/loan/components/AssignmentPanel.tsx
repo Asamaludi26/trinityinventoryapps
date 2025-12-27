@@ -133,7 +133,7 @@ export const AssignmentPanel: React.FC<AssignmentPanelProps> = ({
                 !usedAssetIds.has(a.id)
             );
 
-            // FIXED C1: Safe array access - check if matchingAssets is not empty before accessing [0]
+            // Safe array access - check if matchingAssets is not empty before accessing [0]
             const firstMatchingAsset = matchingAssets.length > 0 ? matchingAssets[0] : null;
             const category = firstMatchingAsset 
                 ? assetCategories.find(c => c.name === firstMatchingAsset.category)

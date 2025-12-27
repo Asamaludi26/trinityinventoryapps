@@ -277,7 +277,6 @@ const RegistrationTable: React.FC<RegistrationTableProps> = ({
                       <div className="text-sm font-medium text-tm-dark">
                         <ClickableLink
                           onClick={() => {
-                            // FIXED C4: Remove non-null assertion, add proper null check
                             if (asset.currentUser) {
                               onShowPreview({
                                 type: "customer",

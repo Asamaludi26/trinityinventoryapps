@@ -293,7 +293,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer, assets, onSave, o
                     brand: brand,
                     quantity: Number(m.quantity),
                     unit: m.unit,
-                    // FIXED C8: Use nullish coalescing operator for safer property access
                     installationDate: customer?.installedMaterials?.find(em => `${em.itemName}|${em.brand}` === m.modelKey)?.installationDate ?? new Date().toISOString().split('T')[0],
                 };
             });

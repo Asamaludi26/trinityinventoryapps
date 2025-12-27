@@ -368,7 +368,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     }
   }, [purchaseDate, warrantyPeriod]);
 
-  // FIXED M8: Add file validation for size and type
+  // File validation constants
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
   

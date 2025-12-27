@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Division, User, UserRole, Page, Asset, Request, PreviewData } from '../../types';
 import Modal from '../../components/ui/Modal';
 import { PencilIcon } from '../../components/icons/PencilIcon';
@@ -204,16 +204,15 @@ export function AccountsPage({ currentUser, setActivePage }: AccountsPageProps):
         setCurrentPage(1);
     };
 
-    // FIXED M1: Wrap function in useCallback to prevent unnecessary re-renders
-    const handleCancelBulkMode = useCallback(() => {
+    const handleCancelBulkMode = () => {
         setIsBulkSelectMode(false);
         setSelectedUserIds([]);
         setSelectedDivisionIds([]);
-    }, []);
+    };
     
     useEffect(() => {
         handleCancelBulkMode();
-    }, [activeView, handleCancelBulkMode]);
+    }, [activeView]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {

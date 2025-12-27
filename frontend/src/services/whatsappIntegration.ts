@@ -359,8 +359,6 @@ export const WhatsAppService = {
 export const sendWhatsAppSimulation = async (
   payload: WAMessagePayload
 ): Promise<void> => {
-  // FIXED m3: Remove console.log, use proper logging in production
-  // In production, this would be handled by backend API
   // Di Backend: await axios.post(process.env.WA_URL, { phone: payload.targetGroup, message: payload.message });
   
   // Development logging - can be removed or replaced with proper logger

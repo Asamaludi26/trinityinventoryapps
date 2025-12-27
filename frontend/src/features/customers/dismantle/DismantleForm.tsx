@@ -99,7 +99,6 @@ const DismantleForm: React.FC<DismantleFormProps> = ({ currentUser, dismantles, 
         setRequestNumber(selectedAsset?.poNumber || '');
     }, [selectedAsset]);
 
-    // FIXED M9: Proper cleanup for IntersectionObserver
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => setIsFooterVisible(entry.isIntersecting), { threshold: 0.1 });
         const currentRef = footerRef.current;
@@ -114,7 +113,7 @@ const DismantleForm: React.FC<DismantleFormProps> = ({ currentUser, dismantles, 
     }, []);
     
     // --- EVENT HANDLERS ---
-    // FIXED M8: Add file validation for size and type
+    // File validation constants
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
     

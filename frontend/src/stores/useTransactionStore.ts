@@ -53,10 +53,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         isLoading: false 
       });
     } catch (error) {
-      // FIXED C6: Add proper error handling and notification
       set({ isLoading: false });
-      console.error('Failed to fetch transactions:', error);
-      useNotificationStore.getState().addToast('Gagal memuat data transaksi. Silakan coba lagi.', 'error');
     }
   },
 

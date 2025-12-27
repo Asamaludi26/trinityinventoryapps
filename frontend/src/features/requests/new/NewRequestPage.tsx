@@ -8,7 +8,6 @@ import {
   OrderDetails,
   PurchaseDetails,
   Activity,
-  UserRole,
 } from "../../../types";
 import { useNotification } from "../../../providers/NotificationProvider";
 import { useSortableData } from "../../../hooks/useSortableData";
@@ -113,8 +112,8 @@ const NewRequestPage: React.FC<NewRequestPageProps> = ({
     if (savedDraft) {
       try {
         const parsed = JSON.parse(savedDraft);
-        // FIXED C2: Validate parsed data before using
-        if (parsed && typeof parsed === 'object' && parsed.lastSaved) {
+        // Validate that parsed is an object before accessing properties
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.lastSaved) {
           setHasExistingDraft(parsed.lastSaved);
         } else {
           // Clean up invalid data
@@ -122,7 +121,6 @@ const NewRequestPage: React.FC<NewRequestPageProps> = ({
           setHasExistingDraft(null);
         }
       } catch (e) {
-        console.error('Failed to parse draft status:', e);
         // Clean up corrupted data
         localStorage.removeItem(userDraftKey);
         setHasExistingDraft(null);
@@ -155,16 +153,10 @@ const NewRequestPage: React.FC<NewRequestPageProps> = ({
     }
   }, [initialFilters, onClearInitialFilters]);
 
-  // FIXED M12: Type guard for user role checks
-  const isStaffRole = (role: UserRole): role is "Staff" | "Leader" => {
-    return role === "Staff" || role === "Leader";
-  };
-
   // Logic: Perhitungan Prioritas & Filter
   const filteredRequests = useMemo(() => {
     let result = requests;
-    // FIXED M12: Use type guard for safer role checking
-    if (isStaffRole(currentUser.role)) {
+    if (currentUser.role === "Staff" || currentUser.role === "Leader") {
       result = result.filter((r) => r.requester === currentUser.name);
     }
 

@@ -79,10 +79,9 @@ const fetchClient = async <T>(endpoint: string, options: RequestInit = {}): Prom
         }
         return response.json();
     } catch (error) {
-        // FIXED M5: handleError handles notification and throws, so we just call it
-        // The error will be thrown by handleError, so caller can catch it if needed
+        // handleError throws the error, so we should re-throw it
         handleError(error);
-        throw error; // Re-throw for type safety and to ensure error propagation
+        throw error; // Explicit throw for type safety
     }
 };
 
