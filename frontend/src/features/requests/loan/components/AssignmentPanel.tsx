@@ -133,10 +133,14 @@ export const AssignmentPanel: React.FC<AssignmentPanelProps> = ({
                 !usedAssetIds.has(a.id)
             );
 
-            const category = assetCategories.find(c => c.name === matchingAssets[0]?.category); // Check logic might need robustness if matchingAssets is empty
+            // FIXED C1: Safe array access - check if matchingAssets is not empty before accessing [0]
+            const firstMatchingAsset = matchingAssets.length > 0 ? matchingAssets[0] : null;
+            const category = firstMatchingAsset 
+                ? assetCategories.find(c => c.name === firstMatchingAsset.category)
+                : undefined;
             // Fallback lookup if matchingAssets empty (e.g. stock 0)
             const typeNameFromItem = availableAssets.find(a => a.name === item.itemName)?.type; 
-            const type = category?.types.find(t => t.name === (matchingAssets[0]?.type || typeNameFromItem));
+            const type = category?.types.find(t => t.name === (firstMatchingAsset?.type || typeNameFromItem));
             
             const isBulk = type?.trackingMethod === 'bulk';
 

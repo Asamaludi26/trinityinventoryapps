@@ -46,14 +46,17 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     try {
       const data = await api.fetchAllData();
       set({ 
-        handovers: data.handovers,
-        dismantles: data.dismantles,
-        maintenances: data.maintenances,
-        installations: data.installations,
+        handovers: data.handovers || [],
+        dismantles: data.dismantles || [],
+        maintenances: data.maintenances || [],
+        installations: data.installations || [],
         isLoading: false 
       });
     } catch (error) {
+      // FIXED C6: Add proper error handling and notification
       set({ isLoading: false });
+      console.error('Failed to fetch transactions:', error);
+      useNotificationStore.getState().addToast('Gagal memuat data transaksi. Silakan coba lagi.', 'error');
     }
   },
 

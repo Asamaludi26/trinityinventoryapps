@@ -37,6 +37,11 @@ const DismantleDetailPage: React.FC<DismantleDetailPageProps> = (props) => {
 
     const handleDownloadPdf = () => {
         if (!printRef.current) return;
+        // FIXED C5: Add type guard for window object properties
+        if (typeof (window as any).jspdf === 'undefined' || typeof (window as any).html2canvas === 'undefined') {
+            addNotification('Library PDF tidak tersedia. Pastikan jsPDF dan html2canvas sudah dimuat.', 'error');
+            return;
+        }
         setIsDownloading(true);
         const { jsPDF } = (window as any).jspdf;
         const html2canvas = (window as any).html2canvas;

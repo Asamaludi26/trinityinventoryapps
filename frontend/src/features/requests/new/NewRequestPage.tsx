@@ -8,6 +8,7 @@ import {
   OrderDetails,
   PurchaseDetails,
   Activity,
+  UserRole,
 } from "../../../types";
 import { useNotification } from "../../../providers/NotificationProvider";
 import { useSortableData } from "../../../hooks/useSortableData";
@@ -112,8 +113,18 @@ const NewRequestPage: React.FC<NewRequestPageProps> = ({
     if (savedDraft) {
       try {
         const parsed = JSON.parse(savedDraft);
-        if (parsed.lastSaved) setHasExistingDraft(parsed.lastSaved);
+        // FIXED C2: Validate parsed data before using
+        if (parsed && typeof parsed === 'object' && parsed.lastSaved) {
+          setHasExistingDraft(parsed.lastSaved);
+        } else {
+          // Clean up invalid data
+          localStorage.removeItem(userDraftKey);
+          setHasExistingDraft(null);
+        }
       } catch (e) {
+        console.error('Failed to parse draft status:', e);
+        // Clean up corrupted data
+        localStorage.removeItem(userDraftKey);
         setHasExistingDraft(null);
       }
     } else {
@@ -144,10 +155,16 @@ const NewRequestPage: React.FC<NewRequestPageProps> = ({
     }
   }, [initialFilters, onClearInitialFilters]);
 
+  // FIXED M12: Type guard for user role checks
+  const isStaffRole = (role: UserRole): role is "Staff" | "Leader" => {
+    return role === "Staff" || role === "Leader";
+  };
+
   // Logic: Perhitungan Prioritas & Filter
   const filteredRequests = useMemo(() => {
     let result = requests;
-    if (currentUser.role === "Staff" || currentUser.role === "Leader") {
+    // FIXED M12: Use type guard for safer role checking
+    if (isStaffRole(currentUser.role)) {
       result = result.filter((r) => r.requester === currentUser.name);
     }
 

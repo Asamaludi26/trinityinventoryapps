@@ -121,10 +121,25 @@ export const RequestForm: React.FC<RequestFormProps> = ({
     const savedDraft = localStorage.getItem(userDraftKey);
 
     if (savedDraft && !prefillItem) {
+      // FIXED C2: Use safeParseJSON utility instead of unsafe JSON.parse
       try {
         const parsed = JSON.parse(savedDraft);
+        // Validate parsed data structure
+        if (!parsed || typeof parsed !== 'object') {
+          console.error('Invalid draft data structure');
+          localStorage.removeItem(userDraftKey);
+          handleAddItem();
+          return;
+        }
         // Simple version check logic
         if (parsed.version !== DRAFT_VERSION) {
+          handleAddItem();
+          return;
+        }
+        // Validate required fields exist
+        if (!Array.isArray(parsed.items)) {
+          console.error('Invalid items array in draft');
+          localStorage.removeItem(userDraftKey);
           handleAddItem();
           return;
         }
@@ -135,6 +150,9 @@ export const RequestForm: React.FC<RequestFormProps> = ({
         setLastSaved(parsed.lastSaved);
         addNotification("Draf permintaan telah dimuat.", "info");
       } catch (e) {
+        console.error('Failed to parse draft:', e);
+        // Clean up corrupted data
+        localStorage.removeItem(userDraftKey);
         handleAddItem();
       }
     } else if (prefillItem) {

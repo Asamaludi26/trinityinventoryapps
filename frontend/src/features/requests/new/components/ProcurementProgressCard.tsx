@@ -35,8 +35,15 @@ const TimelineStep: React.FC<{
 
 export const ProcurementProgressCard: React.FC<{ request: Request, assets: Asset[] }> = ({ request, assets }) => {
     const registeredAssets = assets.filter(a => a.poNumber === request.id || a.woRoIntNumber === request.id);
+    // FIXED C3: Safe Math.max - validate array and dates before using Math.max
     const lastRegistrationDate = registeredAssets.length > 0 && request.isRegistered
-        ? new Date(Math.max(...registeredAssets.map(a => new Date(a.registrationDate).getTime()))).toISOString()
+        ? (() => {
+            const validDates = registeredAssets
+                .map(a => new Date(a.registrationDate).getTime())
+                .filter(time => !isNaN(time) && isFinite(time));
+            if (validDates.length === 0) return null;
+            return new Date(Math.max(...validDates)).toISOString();
+        })()
         : null;
 
     const order: ItemStatus[] = [ ItemStatus.APPROVED, ItemStatus.PURCHASING, ItemStatus.IN_DELIVERY, ItemStatus.ARRIVED, ItemStatus.AWAITING_HANDOVER, ItemStatus.COMPLETED ];
@@ -67,7 +74,14 @@ export const ProcurementProgressCard: React.FC<{ request: Request, assets: Asset
     
     const steps = [
         { status: ItemStatus.APPROVED, label: 'Disetujui', icon: CheckIcon, date: request.finalApprovalDate },
-        { status: ItemStatus.PURCHASING, label: 'Pengadaan', icon: ShoppingCartIcon, date: request.purchaseDetails ? new Date(Math.max(...Object.values(request.purchaseDetails).map((d: PurchaseDetails) => new Date(d.purchaseDate).getTime()))).toISOString() : null },
+        { status: ItemStatus.PURCHASING, label: 'Pengadaan', icon: ShoppingCartIcon, date: request.purchaseDetails ? (() => {
+            // FIXED C3: Safe Math.max - validate dates before using Math.max
+            const validDates = Object.values(request.purchaseDetails)
+                .map((d: PurchaseDetails) => new Date(d.purchaseDate).getTime())
+                .filter(time => !isNaN(time) && isFinite(time));
+            if (validDates.length === 0) return null;
+            return new Date(Math.max(...validDates)).toISOString();
+        })() : null },
         { status: ItemStatus.IN_DELIVERY, label: 'Pengiriman', icon: TruckIcon, date: request.actualShipmentDate || null },
         { status: ItemStatus.ARRIVED, label: 'Tiba', icon: ArchiveBoxIcon, date: request.arrivalDate },
         { status: ItemStatus.AWAITING_HANDOVER, label: 'Dicatat', icon: RegisterIcon, date: lastRegistrationDate },

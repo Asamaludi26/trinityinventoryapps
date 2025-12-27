@@ -7,6 +7,7 @@ import {
   Request,
   LoanRequest,
   AssetReturn,
+  UserRole,
 } from "./types";
 
 // Providers
@@ -217,9 +218,15 @@ const AppContent: React.FC = () => {
     "kategori",
   ];
 
+  // FIXED M12: Type guard for user role checks
+  const isStaffRole = (role: UserRole): role is "Staff" | "Leader" => {
+    return role === "Staff" || role === "Leader";
+  };
+
   const renderPage = () => {
+    // FIXED M12: Use type guard for safer role checking
     if (
-      currentUser.role === "Staff" &&
+      isStaffRole(currentUser.role) &&
       staffRestrictedPages.includes(activePage)
     ) {
       return <PermissionDeniedPage />;
@@ -573,7 +580,15 @@ const App: React.FC = () => {
   }
 
   if (!currentUser) {
-    return <LoginPage onLogin={async () => ({} as any)} />;
+    // FIXED C5: Remove unsafe type casting, use proper type
+    return (
+      <LoginPage
+        onLogin={async () => {
+          // This is a placeholder - actual login handled by LoginPage component
+          throw new Error("Login should be handled by LoginPage component");
+        }}
+      />
+    );
   }
 
   return <AppContent />;

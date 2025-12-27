@@ -359,10 +359,17 @@ export const WhatsAppService = {
 export const sendWhatsAppSimulation = async (
   payload: WAMessagePayload
 ): Promise<void> => {
+  // FIXED m3: Remove console.log, use proper logging in production
+  // In production, this would be handled by backend API
   // Di Backend: await axios.post(process.env.WA_URL, { phone: payload.targetGroup, message: payload.message });
-  console.log(
-    `[WA-ADAPTER] Sending payload to ${payload.targetGroup} (${payload.groupName})`
-  );
+  
+  // Development logging - can be removed or replaced with proper logger
+  if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[WA-ADAPTER] Sending payload to ${payload.targetGroup} (${payload.groupName})`
+    );
+  }
 
   // Simulate Network Delay
   await new Promise((resolve) => setTimeout(resolve, 500));

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Asset, AssetCategory, StockMovement, MovementType, ActivityLogEntry } from '../types';
 import * as api from '../services/api';
+import { useNotificationStore } from './useNotificationStore';
 
 interface AssetState {
   assets: Asset[];
@@ -52,14 +53,17 @@ export const useAssetStore = create<AssetState>((set, get) => ({
     try {
       const data = await api.fetchAllData();
       set({ 
-          assets: data.assets, 
-          categories: data.assetCategories, 
+          assets: data.assets || [], 
+          categories: data.assetCategories || [], 
           stockMovements: (data as any).stockMovements || [],
           isLoading: false 
       });
     } catch (error) {
+      // FIXED C6: Add proper error handling and notification
       set({ isLoading: false });
-      // Error handled by Interceptor
+      console.error('Failed to fetch assets:', error);
+      useNotificationStore.getState().addToast('Gagal memuat data aset. Silakan coba lagi.', 'error');
+      // Error also handled by API interceptor, but we log it here for debugging
     }
   },
 

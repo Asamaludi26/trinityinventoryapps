@@ -368,9 +368,35 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     }
   }, [purchaseDate, warrantyPeriod]);
 
+  // FIXED M8: Add file validation for size and type
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files)
-      setAttachments((prev) => [...prev, ...Array.from(event.target.files!)]);
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+      const validFiles: File[] = [];
+      
+      files.forEach(file => {
+        // Validate file size
+        if (file.size > MAX_FILE_SIZE) {
+          addNotification(`File ${file.name} terlalu besar (maksimal 10MB)`, 'error');
+          return;
+        }
+        
+        // Validate file type
+        if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+          addNotification(`Format file ${file.name} tidak didukung. Gunakan JPG, PNG, atau PDF`, 'error');
+          return;
+        }
+        
+        validFiles.push(file);
+      });
+      
+      if (validFiles.length > 0) {
+        setAttachments((prev) => [...prev, ...validFiles]);
+      }
+    }
   };
 
   const removeAttachment = (fileName: string) => {

@@ -86,8 +86,8 @@ const NewRequestDetailPage: React.FC<RequestDetailPageProps> = (props) => {
              
              Object.entries(request.purchaseDetails).forEach(([itemId, details]) => {
                 const d = details as PurchaseDetails;
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { filledBy, fillDate, ...rest } = d;
+                // FIXED m3: Use underscore prefix for intentionally unused variables
+                const { filledBy: _filledBy, fillDate: _fillDate, ...rest } = d;
                 mappedDetails[Number(itemId)] = rest;
                 hasData = true;
              });
