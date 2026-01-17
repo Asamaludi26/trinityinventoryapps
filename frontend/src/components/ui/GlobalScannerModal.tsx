@@ -1,13 +1,10 @@
-
-import React, { useEffect, useRef, useState } from 'react';
-import Modal from './Modal';
-import { CheckIcon } from '../icons/CheckIcon';
-import { parseScanData } from '../../utils/scanner';
-import { ParsedScanResult } from '../../types';
-import { useNotification } from '../../providers/NotificationProvider';
-
-declare var Html5Qrcode: any;
-declare var Html5QrcodeSupportedFormats: any;
+import React, { useEffect, useRef, useState } from "react";
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
+import Modal from "./Modal";
+import { CheckIcon } from "../icons/CheckIcon";
+import { parseScanData } from "../../utils/scanner";
+import { ParsedScanResult } from "../../types";
+import { useNotification } from "../../providers/NotificationProvider";
 
 interface GlobalScannerModalProps {
   isOpen: boolean;
@@ -15,7 +12,11 @@ interface GlobalScannerModalProps {
   onScanSuccess: (parsedData: ParsedScanResult) => void;
 }
 
-export const GlobalScannerModal: React.FC<GlobalScannerModalProps> = ({ isOpen, onClose, onScanSuccess }) => {
+export const GlobalScannerModal: React.FC<GlobalScannerModalProps> = ({
+  isOpen,
+  onClose,
+  onScanSuccess,
+}) => {
   const scannerRef = useRef<any>(null);
   const addNotification = useNotification();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -38,83 +39,94 @@ export const GlobalScannerModal: React.FC<GlobalScannerModalProps> = ({ isOpen, 
         scannerRef.current = html5QrCode;
 
         const successCallback = (decodedText: string, decodedResult: any) => {
-            // Pause logic to prevent multiple scans
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.pause(); 
-                
-                const parsed = parseScanData(decodedText);
-                setScanResult(parsed);
-                setIsSuccess(true);
+          // Pause logic to prevent multiple scans
+          if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.pause();
 
-                // Stop safely
-                html5QrCode.stop()
-                    .then(() => {
-                        html5QrCode.clear();
-                        setTimeout(() => onScanSuccess(parsed), 600);
-                    })
-                    .catch((err: any) => {
-                        console.warn("Error stopping scanner after success:", err);
-                        // Even if stop fails, proceed to callback
-                        setTimeout(() => onScanSuccess(parsed), 600);
-                    });
-            }
+            const parsed = parseScanData(decodedText);
+            setScanResult(parsed);
+            setIsSuccess(true);
+
+            // Stop safely
+            html5QrCode
+              .stop()
+              .then(() => {
+                html5QrCode.clear();
+                setTimeout(() => onScanSuccess(parsed), 600);
+              })
+              .catch((err: any) => {
+                console.warn("Error stopping scanner after success:", err);
+                // Even if stop fails, proceed to callback
+                setTimeout(() => onScanSuccess(parsed), 600);
+              });
+          }
         };
 
         const config = {
-            fps: 10,
-            qrbox: (viewfinderWidth: number, viewfinderHeight: number) => {
+          fps: 10,
+          qrbox: (viewfinderWidth: number, viewfinderHeight: number) => {
             const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
             const qrboxSize = Math.floor(minEdge * 0.7);
             return { width: qrboxSize, height: qrboxSize };
-            },
-            formatsToSupport: [
+          },
+          formatsToSupport: [
             Html5QrcodeSupportedFormats.QR_CODE,
             Html5QrcodeSupportedFormats.CODE_128,
             Html5QrcodeSupportedFormats.EAN_13,
             Html5QrcodeSupportedFormats.UPC_A,
             Html5QrcodeSupportedFormats.EAN_8,
-            ],
-            experimentalFeatures: {
+          ],
+          experimentalFeatures: {
             useBarCodeDetectorIfSupported: true,
-            },
+          },
         };
 
         html5QrCode
-            .start(
+          .start(
             { facingMode: "environment" },
             config,
             successCallback,
             (errorMessage: string) => {
-                // Ignore parse errors, they are noisy
-            } 
-            )
-            .catch((err: any) => {
-                // Handle "play() request was interrupted" specifically
-                if (err?.name === "NotAllowedError") {
-                    addNotification("Gagal memulai kamera. Pastikan izin telah diberikan.", "error");
-                } else if (err?.message?.includes("interrupted") || err?.name === "AbortError") {
-                    // This error is expected if the modal is closed quickly during initialization
-                    console.debug("Scanner initialization interrupted");
-                } else {
-                    console.warn("Unable to start scanning.", err);
-                }
-            });
-
+              // Ignore parse errors, they are noisy
+            },
+          )
+          .catch((err: any) => {
+            // Handle "play() request was interrupted" specifically
+            if (err?.name === "NotAllowedError") {
+              addNotification(
+                "Gagal memulai kamera. Pastikan izin telah diberikan.",
+                "error",
+              );
+            } else if (
+              err?.message?.includes("interrupted") ||
+              err?.name === "AbortError"
+            ) {
+              // This error is expected if the modal is closed quickly during initialization
+              console.debug("Scanner initialization interrupted");
+            } else {
+              console.warn("Unable to start scanning.", err);
+            }
+          });
       } catch (e) {
-          console.error("Failed to initialize Html5Qrcode", e);
+        console.error("Failed to initialize Html5Qrcode", e);
       }
     }
 
     return () => {
       if (html5QrCode) {
-          // If scanning, stop it. If starting, the start catch block handles it.
-          // Note: Html5Qrcode.isScanning is the flag to check.
-          if (html5QrCode.isScanning) {
-            html5QrCode.stop().then(() => html5QrCode.clear()).catch((err: any) => console.warn("Cleanup stop error:", err));
-          } else {
-            // If not scanning but instance exists (e.g. stopped or failed start), clear to remove video element
-            try { html5QrCode.clear(); } catch(e) {}
-          }
+        // If scanning, stop it. If starting, the start catch block handles it.
+        // Note: Html5Qrcode.isScanning is the flag to check.
+        if (html5QrCode.isScanning) {
+          html5QrCode
+            .stop()
+            .then(() => html5QrCode.clear())
+            .catch((err: any) => console.warn("Cleanup stop error:", err));
+        } else {
+          // If not scanning but instance exists (e.g. stopped or failed start), clear to remove video element
+          try {
+            html5QrCode.clear();
+          } catch (e) {}
+        }
       }
     };
   }, [isOpen, onScanSuccess, onClose, addNotification]);

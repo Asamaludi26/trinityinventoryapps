@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import {
   Installation,
   User,
@@ -47,8 +49,6 @@ const InstallationDetailPage: React.FC<InstallationDetailPageProps> = ({
   const handleDownloadPdf = () => {
     if (!printRef.current) return;
     setIsDownloading(true);
-    const { jsPDF } = (window as any).jspdf;
-    const html2canvas = (window as any).html2canvas;
 
     html2canvas(printRef.current, { scale: 2, useCORS: true, logging: false })
       .then((canvas: HTMLCanvasElement) => {

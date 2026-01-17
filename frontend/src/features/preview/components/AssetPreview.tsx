@@ -38,13 +38,13 @@ import {
   BsLightningFill,
 } from "react-icons/bs";
 
+import html2canvas from "html2canvas";
+
 // Stores Integration
 import { useAssetStore } from "../../../stores/useAssetStore";
 import { useMasterDataStore } from "../../../stores/useMasterDataStore";
 import { useTransactionStore } from "../../../stores/useTransactionStore";
 import { useAuthStore } from "../../../stores/useAuthStore"; // Added Auth Store
-
-declare var html2canvas: any;
 
 // --- Sub-Components ---
 

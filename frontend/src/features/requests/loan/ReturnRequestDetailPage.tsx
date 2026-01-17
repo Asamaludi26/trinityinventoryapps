@@ -1,4 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import {
   AssetReturn,
   User,
@@ -114,8 +116,6 @@ const ReturnRequestDetailPage: React.FC<ReturnRequestDetailPageProps> = (
   const handleDownloadPdf = () => {
     if (!printRef.current) return;
     setIsDownloading(true);
-    const { jsPDF } = (window as any).jspdf;
-    const html2canvas = (window as any).html2canvas;
     html2canvas(printRef.current, { scale: 2, useCORS: true, logging: false })
       .then((canvas: HTMLCanvasElement) => {
         const imgData = canvas.toDataURL("image/png");

@@ -20,6 +20,44 @@ dan proyek ini mengikuti [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ---
 
+## [1.2.0] - 2025-01-20
+
+### 📦 Frontend Dependencies & Code Quality Release
+
+Rilis yang fokus pada instalasi dependensi produksi dan perbaikan kualitas kode untuk persiapan integrasi backend.
+
+### Added
+
+#### Dependencies Baru
+
+- **jspdf** (v4.0.0): Library untuk generate PDF documents dari frontend
+- **html2canvas** (v1.4.1): Library untuk capture HTML elements sebagai canvas/image
+- **html5-qrcode** (v2.3.8): Library untuk QR code dan barcode scanning via kamera
+- **qrcode.react** (v4.2.0): React component untuk generate QR code
+- **recharts** (v3.6.0): Library charting untuk dashboard analytics
+
+### Changed
+
+#### Code Quality Improvements
+
+- **PDF Export**: Refactored dari window globals ke proper ES module imports
+  - `ReturnRequestDetailPage.tsx`: Removed `(window as any).jspdf` usage
+  - `LoanRequestDetailPage.tsx`: Removed `(window as any).jspdf` usage
+  - `InstallationDetailPage.tsx`: Removed `(window as any).jspdf` usage
+  - `AssetPreview.tsx`: Removed `declare var html2canvas` usage
+- **QR Scanner**: Refactored dari window globals ke proper ES module imports
+  - `GlobalScannerModal.tsx`: Removed `declare var Html5Qrcode` usage
+  - Now uses proper typed imports from `html5-qrcode` package
+
+### Technical Notes
+
+- Build output: 550 modules transformed
+- TypeScript check: 0 errors
+- Bundle size: ~1.9MB main chunk (consider code-splitting for production)
+- All dependencies are latest stable versions as of January 2025
+
+---
+
 ## [1.1.0] - 2026-01-17
 
 ### 🔧 Code Quality & UX Improvements Release
