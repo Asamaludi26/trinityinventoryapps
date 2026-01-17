@@ -31,11 +31,12 @@ Dokumen ini berfungsi sebagai peta navigasi dan referensi cepat untuk seluruh do
 
 ### 🔧 DevOps / SysAdmin
 
-1. [Git Workflow](03_STANDARDS_AND_PROCEDURES/GIT_WORKFLOW.md) - Branching strategy & CI/CD
-2. [Deployment Guide](04_OPERATIONS/DEPLOYMENT.md) - Deployment steps
-3. [Debian 13 Guide](07_DEPLOYMENT/DEBIAN_13_GUIDE.md) - Server setup
-4. [Infrastructure Guide](04_OPERATIONS/INFRASTRUCTURE_AND_DEPLOYMENT.md) - Arsitektur infra
-5. [Backup & Recovery](04_OPERATIONS/BACKUP_AND_RECOVERY.md) - Prosedur backup
+1. [DevOps Pipeline](04_OPERATIONS/DEVOPS_PIPELINE.md) - 🆕 CI/CD workflow lengkap
+2. [Git Workflow](03_STANDARDS_AND_PROCEDURES/GIT_WORKFLOW.md) - Branching strategy & CI/CD
+3. [Deployment Guide](04_OPERATIONS/DEPLOYMENT.md) - Deployment steps
+4. [Debian 13 Guide](07_DEPLOYMENT/DEBIAN_13_GUIDE.md) - Server setup
+5. [Infrastructure Guide](04_OPERATIONS/INFRASTRUCTURE_AND_DEPLOYMENT.md) - Arsitektur infra
+6. [Backup & Recovery](04_OPERATIONS/BACKUP_AND_RECOVERY.md) - Prosedur backup
 
 ### 📋 Product Manager / Business Analyst
 
@@ -78,6 +79,7 @@ Docs/
 │   ├── BACKEND_GUIDE.md            # NestJS development
 │   ├── BACKEND_INTEGRATION_BLUEPRINT.md # Integration checklist
 │   ├── BACKEND_IMPLEMENTATION_PROMPT.md # AI prompts for backend
+│   ├── DESIGN_TOKEN_MIGRATION.md   # 🆕 Color system migration guide
 │   ├── API_REFERENCE.md            # REST API documentation
 │   ├── API_ERROR_CODES.md          # Error code catalog
 │   ├── STATE_MANAGEMENT_GUIDE.md   # Zustand store patterns
@@ -101,6 +103,7 @@ Docs/
 │
 ├── 04_OPERATIONS/                  # Operasional
 │   ├── DEPLOYMENT.md               # Deployment procedures
+│   ├── DEVOPS_PIPELINE.md          # 🆕 CI/CD & DevOps workflow
 │   ├── INFRASTRUCTURE_AND_DEPLOYMENT.md # Infra architecture
 │   ├── BACKUP_AND_RECOVERY.md      # DR procedures
 │   ├── MONITORING_AND_LOGGING.md   # Observability
