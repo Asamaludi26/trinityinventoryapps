@@ -1,0 +1,48 @@
+---
+name: Bug Report
+about: Report a bug to help us improve
+labels: bug
+---
+
+## 🐛 Bug Description
+
+<!-- A clear and concise description of the bug -->
+
+## 📋 Steps to Reproduce
+
+1. Go to '...'
+2. Click on '...'
+3. Scroll down to '...'
+4. See error
+
+## ✅ Expected Behavior
+
+<!-- What you expected to happen -->
+
+## ❌ Actual Behavior
+
+<!-- What actually happened -->
+
+## 📸 Screenshots
+
+<!-- If applicable, add screenshots to help explain your problem -->
+
+## 🔧 Environment
+
+- **Browser**: [e.g., Chrome 120, Firefox 121]
+- **OS**: [e.g., Windows 11, macOS Sonoma]
+- **Device**: [e.g., Desktop, Mobile]
+- **Screen Size**: [e.g., 1920x1080]
+
+## 📝 Additional Context
+
+<!-- Add any other context about the problem here -->
+
+## 🏷️ User Role
+
+<!-- Which user role were you logged in as? -->
+
+- [ ] Super Admin
+- [ ] Admin
+- [ ] Staff
+- [ ] Not logged in
