@@ -20,6 +20,71 @@ dan proyek ini mengikuti [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ---
 
+## [1.1.0] - 2026-01-17
+
+### 🔧 Code Quality & UX Improvements Release
+
+Rilis yang fokus pada perbaikan bug, peningkatan kualitas kode, dan konsistensi UI/UX.
+
+### Fixed
+
+#### Bug Fixes
+
+- **useFileAttachment**: Fixed memory leak pada blob URL cleanup dengan proper ref tracking
+- **useSortableData**: Fixed missing date string sorting yang menyebabkan tanggal tidak ter-sort dengan benar
+- **StatusBadge**: Fixed missing status mapping untuk `IN_CUSTODY`, `CONSUMED`, dan beberapa status baru
+- **CustomSelect**: Fixed missing keyboard navigation (Arrow keys, Enter, Escape)
+- **useGenericFilter**: Fixed handling untuk array-type filter values yang tidak bekerja
+
+#### UI/UX Fixes
+
+- **StatusBadge**: Added support untuk size `lg` dan improved truncation handling
+- **CustomSelect**: Added proper ARIA attributes untuk accessibility
+- **CustomSelect**: Added highlight state saat keyboard navigation
+
+### Added
+
+#### Komponen Baru
+
+- **ErrorBoundary**: Komponen untuk graceful error handling dengan development-only error details
+- **withErrorBoundary**: HOC untuk wrapping komponen dengan error boundary
+- **EmptyState**: Komponen unified untuk empty state displays dengan multiple variants
+- **SearchEmptyState**: Komponen khusus untuk hasil pencarian kosong
+- **TableEmptyState**: Komponen khusus untuk tabel kosong
+- **ConfirmDialog**: Modal konfirmasi untuk aksi berbahaya dengan optional text confirmation
+
+#### Utility Enhancements
+
+- **statusUtils**: Added `getLoanRequestStatusClass` untuk status loan request
+- **statusUtils**: Added `getReturnStatusClass` untuk status pengembalian aset
+- **statusUtils**: Added `getStatusLabel` helper untuk label user-friendly
+- **useGenericFilter**: Added `setFilters` untuk batch filter update
+- **useGenericFilter**: Added `resetAll` untuk reset filters dan search
+- **useGenericFilter**: Added `hasActiveFilters` boolean helper
+- **useSortableData**: Added `resetSort` function
+- **useFileAttachment**: Added `isProcessing` state untuk tracking async operations
+
+### Changed
+
+#### Code Quality Improvements
+
+- **useFileAttachment**: Refactored dengan useRef untuk prevent stale closure di cleanup
+- **useFileAttachment**: Added proper initialization handling untuk initial files
+- **useSortableData**: Enhanced dengan locale-aware sorting untuk Indonesian
+- **useSortableData**: Added proper Date object dan ISO string detection
+- **useGenericFilter**: Improved dengan useCallback untuk better performance
+- **useGenericFilter**: Added empty array handling di filter logic
+- **CustomSelect**: Refactored dengan useCallback untuk handler functions
+- **StatusBadge**: Enhanced matching logic untuk lebih banyak status variations
+- **statusUtils**: Added complete status coverage untuk semua enum values
+
+### Documentation
+
+- Created detailed feature documentation for code review findings
+- Updated component JSDoc comments dengan usage examples
+
+---
+
 ## [1.0.0] - 2026-01-17
 
 ### 🎉 Initial Production Release

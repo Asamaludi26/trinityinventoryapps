@@ -176,23 +176,52 @@ Refer to: `Docs/02_DEVELOPMENT_GUIDES/STATE_MANAGEMENT_GUIDE.md`
 
 ### Utilities
 
-| Utility                      | Location                               | Function                   |
-| ---------------------------- | -------------------------------------- | -------------------------- |
-| `permissions.ts`             | `src/utils/permissions.ts`             | RBAC permission checks     |
-| `dateFormatter.ts`           | `src/utils/dateFormatter.ts`           | Indonesian date format     |
-| `documentNumberGenerator.ts` | `src/utils/documentNumberGenerator.ts` | Document number generation |
-| `statusUtils.ts`             | `src/utils/statusUtils.ts`             | Status color mappings      |
-| `csvExporter.ts`             | `src/utils/csvExporter.ts`             | Export data to CSV         |
-| `depreciation.ts`            | `src/utils/depreciation.ts`            | Depreciation calculation   |
+| Utility                      | Location                               | Function                                |
+| ---------------------------- | -------------------------------------- | --------------------------------------- |
+| `permissions.ts`             | `src/utils/permissions.ts`             | RBAC permission checks                  |
+| `dateFormatter.ts`           | `src/utils/dateFormatter.ts`           | Indonesian date format                  |
+| `documentNumberGenerator.ts` | `src/utils/documentNumberGenerator.ts` | Document number generation              |
+| `statusUtils.ts`             | `src/utils/statusUtils.ts`             | Status color mappings (Enhanced v1.1.0) |
+| `csvExporter.ts`             | `src/utils/csvExporter.ts`             | Export data to CSV                      |
+| `depreciation.ts`            | `src/utils/depreciation.ts`            | Depreciation calculation                |
+
+**statusUtils.ts Functions (v1.1.0):**
+
+- `getAssetStatusClass(status)` - Warna badge untuk status aset
+- `getRequestStatusClass(status)` - Warna badge untuk status request
+- `getHandoverStatusClass(status)` - Warna badge untuk status serah terima
+- `getLoanRequestStatusClass(status)` - Warna badge untuk status peminjaman
+- `getReturnStatusClass(status)` - Warna badge untuk status pengembalian
+- `getStatusLabel(status)` - Konversi status ke label bahasa Indonesia
 
 ### Custom Hooks
 
-| Hook                 | Location                          | Usage                  |
-| -------------------- | --------------------------------- | ---------------------- |
-| `useGenericFilter`   | `src/hooks/useGenericFilter.ts`   | Reusable filter logic  |
-| `useSortableData`    | `src/hooks/useSortableData.ts`    | Table sorting          |
-| `useActionableItems` | `src/hooks/useActionableItems.ts` | Action item management |
-| `useFileAttachment`  | `src/hooks/useFileAttachment.ts`  | File upload handling   |
+| Hook                 | Location                          | Usage                                   |
+| -------------------- | --------------------------------- | --------------------------------------- |
+| `useGenericFilter`   | `src/hooks/useGenericFilter.ts`   | Reusable filter logic (Enhanced v1.1.0) |
+| `useSortableData`    | `src/hooks/useSortableData.ts`    | Table sorting (Enhanced v1.1.0)         |
+| `useActionableItems` | `src/hooks/useActionableItems.ts` | Action item management                  |
+| `useFileAttachment`  | `src/hooks/useFileAttachment.ts`  | File upload handling (Fixed v1.1.0)     |
+
+**Hook Enhancements (v1.1.0):**
+
+- `useGenericFilter`: Support array filter, batch updates via `setFilters()`, `hasActiveFilters`
+- `useSortableData`: Date string detection, `resetSort()` function
+- `useFileAttachment`: Memory leak fix, `isProcessing` state
+
+### UI Components (Atomic)
+
+Refer to: `Docs/03_STANDARDS_AND_PROCEDURES/COMPONENT_API_SPEC.md`
+
+| Component       | Location                              | Function                            |
+| --------------- | ------------------------------------- | ----------------------------------- |
+| `ActionButton`  | `src/components/ui/ActionButton.tsx`  | Tombol aksi standar                 |
+| `StatusBadge`   | `src/components/ui/StatusBadge.tsx`   | Badge status dengan warna           |
+| `Modal`         | `src/components/ui/Modal.tsx`         | Modal/dialog container              |
+| `CustomSelect`  | `src/components/ui/CustomSelect.tsx`  | Dropdown select kustom              |
+| `ConfirmDialog` | `src/components/ui/ConfirmDialog.tsx` | Dialog konfirmasi (NEW v1.1.0)      |
+| `EmptyState`    | `src/components/ui/EmptyState.tsx`    | Empty state display (NEW v1.1.0)    |
+| `ErrorBoundary` | `src/components/ui/ErrorBoundary.tsx` | Error handling wrapper (NEW v1.1.0) |
 
 ---
 
@@ -238,6 +267,39 @@ Refer to: `Docs/02_DEVELOPMENT_GUIDES/TROUBLESHOOTING.md`
 - Keep `Docs/02_DEVELOPMENT_GUIDES/API_REFERENCE.md` in sync with the NestJS Controllers.
 - Update `Docs/CHANGELOG/CHANGELOG.md` for significant changes.
 
+### C. Mandatory Changelog & Release Documentation (NEW v1.1.0)
+
+**WAJIB DIPATUHI**: Setiap kali melakukan perubahan pada kode, dokumentasi changelog HARUS dibuat:
+
+1. **Update CHANGELOG.md**:
+   - Lokasi: `Docs/CHANGELOG/CHANGELOG.md`
+   - Format: Semantic Versioning (MAJOR.MINOR.PATCH)
+   - Kategori: Added, Changed, Fixed, Deprecated, Removed, Security
+   - Contoh: `## [1.1.0] - 2025-01-20`
+
+2. **Buat Release Notes Detail**:
+   - Lokasi: `Docs/CHANGELOG/releases/vX.X.X.md`
+   - Konten wajib:
+     - Ringkasan perubahan
+     - Detail teknis setiap perubahan
+     - Migration guide (jika ada breaking changes)
+     - Contoh penggunaan fitur baru
+
+3. **Update Component API Spec** (untuk komponen UI baru):
+   - Lokasi: `Docs/03_STANDARDS_AND_PROCEDURES/COMPONENT_API_SPEC.md`
+   - Dokumentasikan: Props, tipe, default values, contoh penggunaan
+   - Tandai komponen baru dengan `(NEW vX.X.X)`
+
+4. **Versioning Guidelines**:
+   - **PATCH** (1.0.X): Bug fixes, minor improvements
+   - **MINOR** (1.X.0): New features, backward compatible
+   - **MAJOR** (X.0.0): Breaking changes
+
+5. **Waktu Dokumentasi**:
+   - Changelog: Segera setelah perubahan selesai
+   - Release notes: Sebelum merge ke main branch
+   - Component spec: Bersamaan dengan pembuatan komponen
+
 ---
 
 ## 7. INTERACTION STYLE
@@ -282,6 +344,15 @@ Before starting any development session, ensure:
 - [ ] Understand the current state of the codebase
 - [ ] Plan changes before implementing
 - [ ] Update documentation after significant changes
+
+After completing any development session, ensure:
+
+- [ ] Update `Docs/CHANGELOG/CHANGELOG.md` with changes made
+- [ ] Create release notes in `Docs/CHANGELOG/releases/` (if applicable)
+- [ ] Update `Docs/03_STANDARDS_AND_PROCEDURES/COMPONENT_API_SPEC.md` (if new UI components)
+- [ ] Update feature documentation in `Docs/06_FEATURES/` (if feature changes)
+- [ ] Verify all new components have proper TypeScript types
+- [ ] Check for console errors and warnings
 
 ---
 
