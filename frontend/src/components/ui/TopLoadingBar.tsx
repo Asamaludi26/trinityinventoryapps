@@ -1,12 +1,15 @@
+import React from "react";
 
-import React from 'react';
-
-export const TopLoadingBar: React.FC<{ isLoading: boolean }> = ({ isLoading }) => {
+export const TopLoadingBar: React.FC<{ isLoading: boolean }> = ({
+  isLoading,
+}) => {
   return (
-    <div 
-      className={`fixed top-0 left-0 right-0 z-[100] h-1 bg-tm-accent/20 overflow-hidden transition-opacity duration-300 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+    <div
+      className={`fixed top-0 left-0 right-0 z-[100] h-1 bg-primary-500/20 overflow-hidden transition-opacity duration-300 ${isLoading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
     >
-      <div className={`h-full bg-tm-primary transition-all duration-500 ease-out ${isLoading ? 'animate-[loading-progress_2s_infinite_linear]' : 'w-0'}`}></div>
+      <div
+        className={`h-full bg-primary-600 transition-all duration-500 ease-out ${isLoading ? "animate-[loading-progress_2s_infinite_linear]" : "w-0"}`}
+      ></div>
       <style>{`
         @keyframes loading-progress {
           0% { width: 0%; transform: translateX(-100%); }

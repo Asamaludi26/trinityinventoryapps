@@ -193,7 +193,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
         disabled={disabled}
-        className={`flex items-center justify-between w-full px-3 py-2 text-left bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-tm-accent sm:text-sm ${disabled ? "bg-gray-200/60 text-gray-500 cursor-not-allowed" : "text-gray-900 cursor-pointer"}`}
+        className={`flex items-center justify-between w-full px-3 py-2 text-left bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-500 sm:text-sm ${disabled ? "bg-gray-200/60 text-gray-500 cursor-not-allowed" : "text-gray-900 cursor-pointer"}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={ariaLabel || placeholder}
@@ -242,7 +242,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 }}
                 onKeyDown={handleKeyDown}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full h-9 py-2 pl-9 pr-4 text-sm bg-gray-100 text-gray-600 border border-gray-300 rounded-md focus:ring-tm-accent focus:border-tm-accent"
+                className="w-full h-9 py-2 pl-9 pr-4 text-sm bg-gray-100 text-gray-600 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
                 aria-label="Search options"
               />
             </div>
@@ -261,10 +261,10 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                   className={`flex items-center justify-between px-3 py-2.5 text-sm cursor-pointer transition-colors duration-150
                                         ${
                                           value === option.value
-                                            ? "bg-tm-primary/10 text-tm-primary font-semibold"
+                                            ? "bg-primary-50 text-primary-600 font-semibold"
                                             : highlightedIndex === index
                                               ? "bg-gray-100 text-gray-900"
-                                              : "text-gray-900 hover:bg-tm-light"
+                                              : "text-gray-900 hover:bg-gray-50"
                                         }`}
                   role="option"
                   aria-selected={value === option.value}
@@ -294,7 +294,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                     setIsOpen(false);
                     onEmptyStateClick();
                   }}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 mt-3 text-xs font-semibold text-white transition-colors rounded-md shadow-sm bg-tm-accent hover:bg-tm-primary"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 mt-3 text-xs font-semibold text-white transition-colors rounded-md shadow-sm bg-primary-500 hover:bg-primary-600"
                 >
                   <PlusIcon className="w-3.5 h-3.5" />
                   {emptyStateButtonLabel}
@@ -314,7 +314,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 setIsOpen(false);
                 onActionClick();
               }}
-              className="flex items-center justify-center w-full gap-2 px-3 py-2 text-xs font-semibold text-tm-primary bg-white border border-gray-200 rounded-md hover:bg-blue-50 hover:border-blue-200 transition-colors shadow-sm"
+              className="flex items-center justify-center w-full gap-2 px-3 py-2 text-xs font-semibold text-primary-600 bg-white border border-gray-200 rounded-md hover:bg-primary-50 hover:border-primary-200 transition-colors shadow-sm"
             >
               <PlusIcon className="w-3.5 h-3.5" />
               {actionLabel}

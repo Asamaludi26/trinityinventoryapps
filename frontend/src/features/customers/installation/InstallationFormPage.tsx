@@ -319,7 +319,7 @@ const InstallationFormPage: React.FC<InstallationFormPageProps> = (props) => {
     return (
       <div className="p-4 sm:p-6 md:p-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-tm-dark">
+          <h1 className="text-3xl font-bold text-gray-900">
             Buat Laporan Instalasi
           </h1>
           <button
@@ -358,10 +358,12 @@ const InstallationFormPage: React.FC<InstallationFormPageProps> = (props) => {
   return (
     <div className="p-4 sm:p-6 md:p-8">
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
-        <h1 className="text-3xl font-bold text-tm-dark">Manajemen Instalasi</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Manajemen Instalasi
+        </h1>
         <button
           onClick={() => setView("form")}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 rounded-lg shadow-sm bg-tm-primary hover:bg-tm-primary-hover"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 rounded-lg shadow-sm bg-primary-600 hover:bg-primary-700"
         >
           <FileSignatureIcon className="w-4 h-4" />
           Buat Laporan Baru
@@ -379,19 +381,19 @@ const InstallationFormPage: React.FC<InstallationFormPageProps> = (props) => {
               placeholder="Cari No. Dokumen, Pelanggan, Teknisi..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 py-2 pl-10 pr-4 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-tm-accent focus:border-tm-accent"
+              className="w-full h-10 py-2 pl-10 pr-4 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div className="relative" ref={filterPanelRef}>
             <button
               onClick={() => setIsFilterPanelOpen((p) => !p)}
               className={`inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-semibold transition-all duration-200 border rounded-lg shadow-sm sm:w-auto 
-                                ${activeFilterCount > 0 ? "bg-tm-light border-tm-accent text-tm-primary" : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"}
+                                ${activeFilterCount > 0 ? "bg-gray-50 border-primary-500 text-primary-600" : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"}
                             `}
             >
               <FilterIcon className="w-4 h-4" /> <span>Filter</span>{" "}
               {activeFilterCount > 0 && (
-                <span className="px-1.5 py-0.5 text-[10px] font-bold text-white rounded-full bg-tm-primary">
+                <span className="px-1.5 py-0.5 text-[10px] font-bold text-white rounded-full bg-primary-600">
                   {activeFilterCount}
                 </span>
               )}
@@ -458,7 +460,7 @@ const InstallationFormPage: React.FC<InstallationFormPageProps> = (props) => {
                     </button>
                     <button
                       onClick={() => setIsFilterPanelOpen(false)}
-                      className="px-4 py-2 text-sm font-semibold text-white bg-tm-primary rounded-lg shadow-sm hover:bg-tm-primary-hover"
+                      className="px-4 py-2 text-sm font-semibold text-white bg-primary-600 rounded-lg shadow-sm hover:bg-primary-700"
                     >
                       Tutup
                     </button>

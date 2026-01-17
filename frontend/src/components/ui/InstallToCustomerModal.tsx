@@ -1,9 +1,8 @@
-
-import React, { useState, useEffect } from 'react';
-import Modal from './Modal';
-import { SpinnerIcon } from '../icons/SpinnerIcon';
-import { CheckIcon } from '../icons/CheckIcon';
-import { Asset, Customer, CustomerStatus } from '../../types';
+import React, { useState, useEffect } from "react";
+import Modal from "./Modal";
+import { SpinnerIcon } from "../icons/SpinnerIcon";
+import { CheckIcon } from "../icons/CheckIcon";
+import { Asset, Customer, CustomerStatus } from "../../types";
 
 interface InstallToCustomerModalProps {
   isOpen: boolean;
@@ -13,7 +12,13 @@ interface InstallToCustomerModalProps {
   onConfirm: (customerId: string) => void;
 }
 
-export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({ isOpen, onClose, asset, customers, onConfirm }) => {
+export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({
+  isOpen,
+  onClose,
+  asset,
+  customers,
+  onConfirm,
+}) => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,7 +26,7 @@ export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({ 
     if (isOpen && customers.length > 0) {
       setSelectedCustomerId(
         customers.find((c) => c.status === CustomerStatus.ACTIVE)?.id ||
-          customers[0].id
+          customers[0].id,
       );
     }
   }, [customers, isOpen]);
@@ -55,7 +60,7 @@ export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({ 
           <button
             onClick={handleConfirm}
             disabled={!selectedCustomerId || isLoading}
-            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm bg-tm-primary hover:bg-tm-primary-hover disabled:bg-tm-primary/70"
+            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm bg-primary-600 hover:bg-primary-700 disabled:bg-primary-600/70"
           >
             {isLoading && <SpinnerIcon className="w-4 h-4 mr-2" />}
             Konfirmasi Pemasangan
@@ -66,7 +71,7 @@ export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({ 
       <div className="space-y-4 text-sm">
         <p className="text-gray-600">Anda akan memasang aset berikut:</p>
         <div className="p-3 bg-gray-50 rounded-lg">
-          <p className="font-semibold text-tm-dark">{asset.name}</p>
+          <p className="font-semibold text-gray-900">{asset.name}</p>
           <p className="text-xs text-gray-500">
             {asset.id} &bull; SN: {asset.serialNumber}
           </p>
@@ -82,7 +87,7 @@ export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({ 
             role="listbox"
             aria-labelledby="customer-listbox-label"
             tabIndex={0}
-            className="w-full h-48 mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-sm custom-scrollbar focus:outline-none focus:ring-2 focus:ring-tm-accent"
+            className="w-full h-48 mt-1 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-sm custom-scrollbar focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             {customers
               .filter((c) => c.status === CustomerStatus.ACTIVE)
@@ -98,8 +103,8 @@ export const InstallToCustomerModal: React.FC<InstallToCustomerModalProps> = ({ 
                   }}
                   className={`flex items-center justify-between px-3 py-2 text-sm cursor-pointer transition-colors ${
                     c.id === selectedCustomerId
-                      ? "bg-tm-primary text-white"
-                      : "text-gray-900 hover:bg-tm-light"
+                      ? "bg-primary-600 text-white"
+                      : "text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   <span>

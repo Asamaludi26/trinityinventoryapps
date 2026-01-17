@@ -1,25 +1,24 @@
-
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { BellIcon } from '../icons/BellIcon';
-import { InfoIcon } from '../icons/InfoIcon';
-import { RequestIcon } from '../icons/RequestIcon';
-import { PencilIcon } from '../icons/PencilIcon';
-import { CheckIcon } from '../icons/CheckIcon';
-import { RegisterIcon } from '../icons/RegisterIcon';
-import { MegaphoneIcon } from '../icons/MegaphoneIcon';
-import { CloseIcon } from '../icons/CloseIcon';
-import { WrenchIcon } from '../icons/WrenchIcon';
-import { SpinnerIcon } from '../icons/SpinnerIcon';
-import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
-import { InboxIcon } from '../icons/InboxIcon';
-import { Avatar } from './Avatar';
-import { Notification, Page, PreviewData, User } from '../../types';
-import { HandoverIcon } from '../icons/HandoverIcon';
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { BellIcon } from "../icons/BellIcon";
+import { InfoIcon } from "../icons/InfoIcon";
+import { RequestIcon } from "../icons/RequestIcon";
+import { PencilIcon } from "../icons/PencilIcon";
+import { CheckIcon } from "../icons/CheckIcon";
+import { RegisterIcon } from "../icons/RegisterIcon";
+import { MegaphoneIcon } from "../icons/MegaphoneIcon";
+import { CloseIcon } from "../icons/CloseIcon";
+import { WrenchIcon } from "../icons/WrenchIcon";
+import { SpinnerIcon } from "../icons/SpinnerIcon";
+import { ExclamationTriangleIcon } from "../icons/ExclamationTriangleIcon";
+import { InboxIcon } from "../icons/InboxIcon";
+import { Avatar } from "./Avatar";
+import { Notification, Page, PreviewData, User } from "../../types";
+import { HandoverIcon } from "../icons/HandoverIcon";
 
 // Stores
-import { useNotificationStore } from '../../stores/useNotificationStore';
-import { useMasterDataStore } from '../../stores/useMasterDataStore';
-import { useUIStore } from '../../stores/useUIStore';
+import { useNotificationStore } from "../../stores/useNotificationStore";
+import { useMasterDataStore } from "../../stores/useMasterDataStore";
+import { useUIStore } from "../../stores/useUIStore";
 
 interface NotificationBellProps {
   currentUser: User;
@@ -35,8 +34,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
   const notifications = useNotificationStore((state) => state.notifications);
   const markAsRead = useNotificationStore((state) => state.markAsRead);
   const markAllAsRead = useNotificationStore((state) => state.markAllAsRead);
-  const setHighlightOnReturn = useUIStore((state) => state.setHighlightOnReturn);
-  
+  const setHighlightOnReturn = useUIStore(
+    (state) => state.setHighlightOnReturn,
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const users = useMasterDataStore((state) => state.users);
@@ -60,51 +61,60 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
         .filter((n) => n.recipientId === currentUser.id)
         .sort(
           (a, b) =>
-            new Date(b.timestamp || '').getTime() - new Date(a.timestamp || '').getTime()
+            new Date(b.timestamp || "").getTime() -
+            new Date(a.timestamp || "").getTime(),
         ),
-    [notifications, currentUser.id]
+    [notifications, currentUser.id],
   );
 
   const unreadCount = useMemo(
     () => myNotifications.filter((n) => !n.isRead).length,
-    [myNotifications]
+    [myNotifications],
   );
 
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id);
-    
+
     // Set item to be highlighted when returning to the list view
     if (notification.referenceId) {
       setHighlightOnReturn(notification.referenceId);
     }
-    
-    if (notification.type && (
-      notification.type.startsWith("REQUEST_") ||
-      [
-        "FOLLOW_UP",
-        "CEO_DISPOSITION",
-        "PROGRESS_UPDATE_REQUEST",
-        "PROGRESS_FEEDBACK",
-        "STATUS_CHANGE",
-      ].includes(notification.type)
-    )) {
+
+    if (
+      notification.type &&
+      (notification.type.startsWith("REQUEST_") ||
+        [
+          "FOLLOW_UP",
+          "CEO_DISPOSITION",
+          "PROGRESS_UPDATE_REQUEST",
+          "PROGRESS_FEEDBACK",
+          "STATUS_CHANGE",
+        ].includes(notification.type))
+    ) {
       if (notification.referenceId) {
-          const targetPage = notification.referenceId.startsWith('LREQ-') ? 'request-pinjam' : 'request';
-          setActivePage(targetPage, { openDetailForId: notification.referenceId });
+        const targetPage = notification.referenceId.startsWith("LREQ-")
+          ? "request-pinjam"
+          : "request";
+        setActivePage(targetPage, {
+          openDetailForId: notification.referenceId,
+        });
       }
-    } else if (notification.type === 'ASSET_HANDED_OVER') {
-        if (notification.referenceId) {
-            onShowPreview({ type: 'handover', id: notification.referenceId });
-        }
-    } else if (notification.type && (
-      notification.type.startsWith("ASSET_") ||
-      ["REPAIR_STARTED", "REPAIR_COMPLETED", "REPAIR_PROGRESS_UPDATE"].includes(
-        notification.type
-      )
-    )) {
-       if (notification.referenceId) {
-           onShowPreview({ type: "asset", id: notification.referenceId });
-       }
+    } else if (notification.type === "ASSET_HANDED_OVER") {
+      if (notification.referenceId) {
+        onShowPreview({ type: "handover", id: notification.referenceId });
+      }
+    } else if (
+      notification.type &&
+      (notification.type.startsWith("ASSET_") ||
+        [
+          "REPAIR_STARTED",
+          "REPAIR_COMPLETED",
+          "REPAIR_PROGRESS_UPDATE",
+        ].includes(notification.type))
+    ) {
+      if (notification.referenceId) {
+        onShowPreview({ type: "asset", id: notification.referenceId });
+      }
     }
     setIsOpen(false);
   };
@@ -196,9 +206,9 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
         </strong>{" "}
         {message}{" "}
         {notification.referenceId && !message.includes("aset baru") && (
-            <strong className="font-semibold text-gray-900">
+          <strong className="font-semibold text-gray-900">
             #{notification.referenceId}
-            </strong>
+          </strong>
         )}
         .
       </>
@@ -208,7 +218,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
   };
 
   const formatRelativeTime = (isoDate?: string) => {
-    if (!isoDate) return '';
+    if (!isoDate) return "";
     const date = new Date(isoDate);
     const now = new Date();
     const diffSeconds = Math.round((now.getTime() - date.getTime()) / 1000);
@@ -224,7 +234,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-tm-primary"
+        className="relative p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-primary-600"
         title={`${unreadCount} notifikasi belum dibaca`}
       >
         <BellIcon className="w-6 h-6" />
@@ -246,7 +256,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllAsRead(currentUser.id)}
-                className="text-xs font-semibold text-tm-primary hover:underline"
+                className="text-xs font-semibold text-primary-600 hover:underline"
               >
                 Tandai semua terbaca
               </button>
@@ -267,10 +277,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
                     }`}
                   >
                     {!notif.isRead && (
-                      <span className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 bg-tm-primary rounded-full"></span>
+                      <span className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary-600 rounded-full"></span>
                     )}
                     <Avatar
-                      name={notif.actorName || 'System'}
+                      name={notif.actorName || "System"}
                       className="w-9 h-9 text-xs flex-shrink-0"
                     />
                     <div className="flex-1">
