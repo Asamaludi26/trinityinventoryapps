@@ -3,7 +3,7 @@
  *
  * Provides a single fetch point for all initial data loading,
  * eliminating redundant API calls across stores.
- * 
+ *
  * Pure API calls - no mock logic.
  */
 
@@ -80,8 +80,12 @@ export const unifiedApi = {
         apiClient.get<any[]>("/customers").catch(() => []),
         apiClient.get<any[]>("/loan-requests").catch(() => []),
         apiClient.get<Handover[]>("/transactions/handovers").catch(() => []),
-        apiClient.get<Installation[]>("/transactions/installations").catch(() => []),
-        apiClient.get<Maintenance[]>("/transactions/maintenances").catch(() => []),
+        apiClient
+          .get<Installation[]>("/transactions/installations")
+          .catch(() => []),
+        apiClient
+          .get<Maintenance[]>("/transactions/maintenances")
+          .catch(() => []),
         apiClient.get<Dismantle[]>("/transactions/dismantles").catch(() => []),
         apiClient.get<Notification[]>("/notifications").catch(() => []),
       ]);
@@ -91,7 +95,9 @@ export const unifiedApi = {
       const requests = (requestsRaw || []).map(transformBackendRequest);
       const users = (usersRaw || []).map(transformBackendUser);
       const customers = (customersRaw || []).map(transformBackendCustomer);
-      const loanRequests = (loanRequestsRaw || []).map(transformBackendLoanRequest);
+      const loanRequests = (loanRequestsRaw || []).map(
+        transformBackendLoanRequest,
+      );
 
       return {
         assets,
@@ -155,8 +161,12 @@ export const unifiedApi = {
     const [handovers, installations, maintenances, dismantles] =
       await Promise.all([
         apiClient.get<Handover[]>("/transactions/handovers").catch(() => []),
-        apiClient.get<Installation[]>("/transactions/installations").catch(() => []),
-        apiClient.get<Maintenance[]>("/transactions/maintenances").catch(() => []),
+        apiClient
+          .get<Installation[]>("/transactions/installations")
+          .catch(() => []),
+        apiClient
+          .get<Maintenance[]>("/transactions/maintenances")
+          .catch(() => []),
         apiClient.get<Dismantle[]>("/transactions/dismantles").catch(() => []),
       ]);
 

@@ -5,7 +5,10 @@
 
 import { apiClient } from "./client";
 import { Request, PurchaseDetails } from "../../types";
-import { transformBackendRequest, toBackendRequestStatus } from "../../utils/enumMapper";
+import {
+  transformBackendRequest,
+  toBackendRequestStatus,
+} from "../../utils/enumMapper";
 
 export interface RequestFilters {
   status?: string;
@@ -53,7 +56,9 @@ export const requestsApi = {
       if (filters.take) params.append("take", String(filters.take));
     }
     const query = params.toString();
-    const response = await apiClient.get<any[]>(`/requests${query ? `?${query}` : ""}`);
+    const response = await apiClient.get<any[]>(
+      `/requests${query ? `?${query}` : ""}`,
+    );
     return (response || []).map(transformBackendRequest);
   },
 
@@ -79,12 +84,17 @@ export const requestsApi = {
     const backendData = {
       requestDate: data.requestDate,
       division: data.division,
-      orderType: data.order?.type === 'Urgent' ? 'URGENT' :
-                 data.order?.type === 'Project Based' ? 'PROJECT_BASED' : 'REGULAR_STOCK',
+      orderType:
+        data.order?.type === "Urgent"
+          ? "URGENT"
+          : data.order?.type === "Project Based"
+            ? "PROJECT_BASED"
+            : "REGULAR_STOCK",
       justification: data.order?.justification,
       project: data.order?.project,
-      allocationTarget: data.order?.allocationTarget === 'Inventory' ? 'INVENTORY' : 'USAGE',
-      items: data.items.map(item => ({
+      allocationTarget:
+        data.order?.allocationTarget === "Inventory" ? "INVENTORY" : "USAGE",
+      items: data.items.map((item) => ({
         itemName: item.itemName,
         itemTypeBrand: item.itemTypeBrand,
         quantity: item.quantity,
@@ -111,7 +121,10 @@ export const requestsApi = {
     id: string,
     payload: ApproveRequestPayload,
   ): Promise<Request> => {
-    const response = await apiClient.post<any>(`/requests/${id}/approve`, payload);
+    const response = await apiClient.post<any>(
+      `/requests/${id}/approve`,
+      payload,
+    );
     return transformBackendRequest(response);
   },
 
@@ -123,8 +136,8 @@ export const requestsApi = {
     payload: { reason?: string; rejectedBy?: string; rejectionReason?: string },
   ): Promise<Request> => {
     // Support both formats
-    const reason = payload.reason || payload.rejectionReason || '';
-    const response = await apiClient.post<any>(`/requests/${id}/reject`, { 
+    const reason = payload.reason || payload.rejectionReason || "";
+    const response = await apiClient.post<any>(`/requests/${id}/reject`, {
       reason,
       rejectedBy: payload.rejectedBy,
     });
@@ -173,7 +186,9 @@ export const requestsApi = {
    * Cancel request
    */
   cancel: async (id: string, reason?: string): Promise<Request> => {
-    const response = await apiClient.post<any>(`/requests/${id}/cancel`, { reason });
+    const response = await apiClient.post<any>(`/requests/${id}/cancel`, {
+      reason,
+    });
     return transformBackendRequest(response);
   },
 
@@ -184,9 +199,12 @@ export const requestsApi = {
     id: string,
     assets: Array<{ itemId: number; assetData: any }>,
   ): Promise<Request> => {
-    const response = await apiClient.post<any>(`/requests/${id}/register-assets`, {
-      assets,
-    });
+    const response = await apiClient.post<any>(
+      `/requests/${id}/register-assets`,
+      {
+        assets,
+      },
+    );
     return transformBackendRequest(response);
   },
 };

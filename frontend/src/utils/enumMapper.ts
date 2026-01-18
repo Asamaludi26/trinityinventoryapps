@@ -11,98 +11,105 @@
  * const status = toBackendAssetStatus('Di Gudang'); // 'IN_STORAGE'
  */
 
-import { UserRole, AssetStatus, AssetCondition, ItemStatus, LoanRequestStatus, CustomerStatus } from '../types';
+import {
+  UserRole,
+  AssetStatus,
+  AssetCondition,
+  ItemStatus,
+  LoanRequestStatus,
+  CustomerStatus,
+} from "../types";
 
 // ============================================================================
 // BACKEND ENUM VALUES (from Prisma)
 // ============================================================================
 
 export type BackendUserRole =
-  | 'SUPER_ADMIN'
-  | 'ADMIN_LOGISTIK'
-  | 'ADMIN_PURCHASE'
-  | 'LEADER'
-  | 'STAFF'
-  | 'TEKNISI';
+  | "SUPER_ADMIN"
+  | "ADMIN_LOGISTIK"
+  | "ADMIN_PURCHASE"
+  | "LEADER"
+  | "STAFF"
+  | "TEKNISI";
 
 export type BackendAssetStatus =
-  | 'IN_STORAGE'
-  | 'IN_USE'
-  | 'ON_LOAN'
-  | 'IN_CUSTODY'
-  | 'UNDER_REPAIR'
-  | 'OUT_FOR_SERVICE'
-  | 'DAMAGED'
-  | 'AWAITING_RETURN'
-  | 'CONSUMED'
-  | 'DISPOSED';
+  | "IN_STORAGE"
+  | "IN_USE"
+  | "ON_LOAN"
+  | "IN_CUSTODY"
+  | "UNDER_REPAIR"
+  | "OUT_FOR_SERVICE"
+  | "DAMAGED"
+  | "AWAITING_RETURN"
+  | "CONSUMED"
+  | "DISPOSED";
 
 export type BackendAssetCondition =
-  | 'BRAND_NEW'
-  | 'GOOD'
-  | 'USED_OKAY'
-  | 'MINOR_DAMAGE'
-  | 'MAJOR_DAMAGE'
-  | 'BROKEN'
-  | 'FOR_PARTS';
+  | "BRAND_NEW"
+  | "GOOD"
+  | "USED_OKAY"
+  | "MINOR_DAMAGE"
+  | "MAJOR_DAMAGE"
+  | "BROKEN"
+  | "FOR_PARTS";
 
 export type BackendRequestStatus =
-  | 'PENDING'
-  | 'LOGISTIC_APPROVED'
-  | 'LOGISTIC_REJECTED'
-  | 'PURCHASE_APPROVED'
-  | 'PURCHASE_REJECTED'
-  | 'ORDERED'
-  | 'ARRIVED'
-  | 'AWAITING_HANDOVER'
-  | 'COMPLETED'
-  | 'REJECTED';
+  | "PENDING"
+  | "LOGISTIC_APPROVED"
+  | "LOGISTIC_REJECTED"
+  | "PURCHASE_APPROVED"
+  | "PURCHASE_REJECTED"
+  | "ORDERED"
+  | "ARRIVED"
+  | "AWAITING_HANDOVER"
+  | "COMPLETED"
+  | "REJECTED";
 
 export type BackendLoanStatus =
-  | 'PENDING'
-  | 'APPROVED'
-  | 'REJECTED'
-  | 'ON_LOAN'
-  | 'RETURNED';
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "ON_LOAN"
+  | "RETURNED";
 
-export type BackendCustomerStatus = 'ACTIVE' | 'INACTIVE' | 'CHURNED';
+export type BackendCustomerStatus = "ACTIVE" | "INACTIVE" | "CHURNED";
 
 export type BackendMovementType =
-  | 'RECEIVED'
-  | 'ISSUED'
-  | 'CONSUMED'
-  | 'ADJUSTED'
-  | 'TRANSFERRED'
-  | 'RETURNED'
-  | 'DISPOSED';
+  | "RECEIVED"
+  | "ISSUED"
+  | "CONSUMED"
+  | "ADJUSTED"
+  | "TRANSFERRED"
+  | "RETURNED"
+  | "DISPOSED";
 
 // ============================================================================
 // USER ROLE MAPPINGS
 // ============================================================================
 
 const userRoleBackendToFrontend: Record<BackendUserRole, UserRole> = {
-  SUPER_ADMIN: 'Super Admin',
-  ADMIN_LOGISTIK: 'Admin Logistik',
-  ADMIN_PURCHASE: 'Admin Purchase',
-  LEADER: 'Leader',
-  STAFF: 'Staff',
-  TEKNISI: 'Staff', // Map TEKNISI to Staff in frontend for now
+  SUPER_ADMIN: "Super Admin",
+  ADMIN_LOGISTIK: "Admin Logistik",
+  ADMIN_PURCHASE: "Admin Purchase",
+  LEADER: "Leader",
+  STAFF: "Staff",
+  TEKNISI: "Staff", // Map TEKNISI to Staff in frontend for now
 };
 
 const userRoleFrontendToBackend: Record<UserRole, BackendUserRole> = {
-  'Super Admin': 'SUPER_ADMIN',
-  'Admin Logistik': 'ADMIN_LOGISTIK',
-  'Admin Purchase': 'ADMIN_PURCHASE',
-  'Leader': 'LEADER',
-  'Staff': 'STAFF',
+  "Super Admin": "SUPER_ADMIN",
+  "Admin Logistik": "ADMIN_LOGISTIK",
+  "Admin Purchase": "ADMIN_PURCHASE",
+  Leader: "LEADER",
+  Staff: "STAFF",
 };
 
 export function fromBackendUserRole(role: BackendUserRole | string): UserRole {
-  return userRoleBackendToFrontend[role as BackendUserRole] || 'Staff';
+  return userRoleBackendToFrontend[role as BackendUserRole] || "Staff";
 }
 
 export function toBackendUserRole(role: UserRole): BackendUserRole {
-  return userRoleFrontendToBackend[role] || 'STAFF';
+  return userRoleFrontendToBackend[role] || "STAFF";
 }
 
 // ============================================================================
@@ -123,30 +130,40 @@ const assetStatusBackendToFrontend: Record<BackendAssetStatus, AssetStatus> = {
 };
 
 const assetStatusFrontendToBackend: Record<AssetStatus, BackendAssetStatus> = {
-  [AssetStatus.IN_STORAGE]: 'IN_STORAGE',
-  [AssetStatus.IN_USE]: 'IN_USE',
-  [AssetStatus.IN_CUSTODY]: 'IN_CUSTODY',
-  [AssetStatus.UNDER_REPAIR]: 'UNDER_REPAIR',
-  [AssetStatus.OUT_FOR_REPAIR]: 'OUT_FOR_SERVICE',
-  [AssetStatus.DAMAGED]: 'DAMAGED',
-  [AssetStatus.AWAITING_RETURN]: 'AWAITING_RETURN',
-  [AssetStatus.CONSUMED]: 'CONSUMED',
-  [AssetStatus.DECOMMISSIONED]: 'DISPOSED',
+  [AssetStatus.IN_STORAGE]: "IN_STORAGE",
+  [AssetStatus.IN_USE]: "IN_USE",
+  [AssetStatus.IN_CUSTODY]: "IN_CUSTODY",
+  [AssetStatus.UNDER_REPAIR]: "UNDER_REPAIR",
+  [AssetStatus.OUT_FOR_REPAIR]: "OUT_FOR_SERVICE",
+  [AssetStatus.DAMAGED]: "DAMAGED",
+  [AssetStatus.AWAITING_RETURN]: "AWAITING_RETURN",
+  [AssetStatus.CONSUMED]: "CONSUMED",
+  [AssetStatus.DECOMMISSIONED]: "DISPOSED",
 };
 
-export function fromBackendAssetStatus(status: BackendAssetStatus | string): AssetStatus {
-  return assetStatusBackendToFrontend[status as BackendAssetStatus] || AssetStatus.IN_STORAGE;
+export function fromBackendAssetStatus(
+  status: BackendAssetStatus | string,
+): AssetStatus {
+  return (
+    assetStatusBackendToFrontend[status as BackendAssetStatus] ||
+    AssetStatus.IN_STORAGE
+  );
 }
 
-export function toBackendAssetStatus(status: AssetStatus | string): BackendAssetStatus {
-  return assetStatusFrontendToBackend[status as AssetStatus] || 'IN_STORAGE';
+export function toBackendAssetStatus(
+  status: AssetStatus | string,
+): BackendAssetStatus {
+  return assetStatusFrontendToBackend[status as AssetStatus] || "IN_STORAGE";
 }
 
 // ============================================================================
 // ASSET CONDITION MAPPINGS
 // ============================================================================
 
-const assetConditionBackendToFrontend: Record<BackendAssetCondition, AssetCondition> = {
+const assetConditionBackendToFrontend: Record<
+  BackendAssetCondition,
+  AssetCondition
+> = {
   BRAND_NEW: AssetCondition.BRAND_NEW,
   GOOD: AssetCondition.GOOD,
   USED_OKAY: AssetCondition.USED_OKAY,
@@ -156,68 +173,90 @@ const assetConditionBackendToFrontend: Record<BackendAssetCondition, AssetCondit
   FOR_PARTS: AssetCondition.FOR_PARTS,
 };
 
-const assetConditionFrontendToBackend: Record<AssetCondition, BackendAssetCondition> = {
-  [AssetCondition.BRAND_NEW]: 'BRAND_NEW',
-  [AssetCondition.GOOD]: 'GOOD',
-  [AssetCondition.USED_OKAY]: 'USED_OKAY',
-  [AssetCondition.MINOR_DAMAGE]: 'MINOR_DAMAGE',
-  [AssetCondition.MAJOR_DAMAGE]: 'MAJOR_DAMAGE',
-  [AssetCondition.FOR_PARTS]: 'FOR_PARTS',
+const assetConditionFrontendToBackend: Record<
+  AssetCondition,
+  BackendAssetCondition
+> = {
+  [AssetCondition.BRAND_NEW]: "BRAND_NEW",
+  [AssetCondition.GOOD]: "GOOD",
+  [AssetCondition.USED_OKAY]: "USED_OKAY",
+  [AssetCondition.MINOR_DAMAGE]: "MINOR_DAMAGE",
+  [AssetCondition.MAJOR_DAMAGE]: "MAJOR_DAMAGE",
+  [AssetCondition.FOR_PARTS]: "FOR_PARTS",
 };
 
-export function fromBackendAssetCondition(condition: BackendAssetCondition | string): AssetCondition {
-  return assetConditionBackendToFrontend[condition as BackendAssetCondition] || AssetCondition.GOOD;
+export function fromBackendAssetCondition(
+  condition: BackendAssetCondition | string,
+): AssetCondition {
+  return (
+    assetConditionBackendToFrontend[condition as BackendAssetCondition] ||
+    AssetCondition.GOOD
+  );
 }
 
-export function toBackendAssetCondition(condition: AssetCondition): BackendAssetCondition {
-  return assetConditionFrontendToBackend[condition] || 'GOOD';
+export function toBackendAssetCondition(
+  condition: AssetCondition,
+): BackendAssetCondition {
+  return assetConditionFrontendToBackend[condition] || "GOOD";
 }
 
 // ============================================================================
 // REQUEST STATUS MAPPINGS
 // ============================================================================
 
-const requestStatusBackendToFrontend: Record<BackendRequestStatus, ItemStatus> = {
-  PENDING: ItemStatus.PENDING,
-  LOGISTIC_APPROVED: ItemStatus.LOGISTIC_APPROVED,
-  LOGISTIC_REJECTED: ItemStatus.REJECTED,
-  PURCHASE_APPROVED: ItemStatus.APPROVED,
-  PURCHASE_REJECTED: ItemStatus.REJECTED,
-  ORDERED: ItemStatus.PURCHASING,
-  ARRIVED: ItemStatus.ARRIVED,
-  AWAITING_HANDOVER: ItemStatus.AWAITING_HANDOVER,
-  COMPLETED: ItemStatus.COMPLETED,
-  REJECTED: ItemStatus.REJECTED,
-};
+const requestStatusBackendToFrontend: Record<BackendRequestStatus, ItemStatus> =
+  {
+    PENDING: ItemStatus.PENDING,
+    LOGISTIC_APPROVED: ItemStatus.LOGISTIC_APPROVED,
+    LOGISTIC_REJECTED: ItemStatus.REJECTED,
+    PURCHASE_APPROVED: ItemStatus.APPROVED,
+    PURCHASE_REJECTED: ItemStatus.REJECTED,
+    ORDERED: ItemStatus.PURCHASING,
+    ARRIVED: ItemStatus.ARRIVED,
+    AWAITING_HANDOVER: ItemStatus.AWAITING_HANDOVER,
+    COMPLETED: ItemStatus.COMPLETED,
+    REJECTED: ItemStatus.REJECTED,
+  };
 
-const requestStatusFrontendToBackend: Record<ItemStatus, BackendRequestStatus> = {
-  [ItemStatus.PENDING]: 'PENDING',
-  [ItemStatus.LOGISTIC_APPROVED]: 'LOGISTIC_APPROVED',
-  [ItemStatus.AWAITING_CEO_APPROVAL]: 'LOGISTIC_APPROVED', // Map to LOGISTIC_APPROVED
-  [ItemStatus.APPROVED]: 'PURCHASE_APPROVED',
-  [ItemStatus.PURCHASING]: 'ORDERED',
-  [ItemStatus.IN_DELIVERY]: 'ORDERED',
-  [ItemStatus.ARRIVED]: 'ARRIVED',
-  [ItemStatus.AWAITING_HANDOVER]: 'AWAITING_HANDOVER',
-  [ItemStatus.COMPLETED]: 'COMPLETED',
-  [ItemStatus.REJECTED]: 'REJECTED',
-  [ItemStatus.CANCELLED]: 'REJECTED',
-  [ItemStatus.IN_PROGRESS]: 'LOGISTIC_APPROVED',
-};
+const requestStatusFrontendToBackend: Record<ItemStatus, BackendRequestStatus> =
+  {
+    [ItemStatus.PENDING]: "PENDING",
+    [ItemStatus.LOGISTIC_APPROVED]: "LOGISTIC_APPROVED",
+    [ItemStatus.AWAITING_CEO_APPROVAL]: "LOGISTIC_APPROVED", // Map to LOGISTIC_APPROVED
+    [ItemStatus.APPROVED]: "PURCHASE_APPROVED",
+    [ItemStatus.PURCHASING]: "ORDERED",
+    [ItemStatus.IN_DELIVERY]: "ORDERED",
+    [ItemStatus.ARRIVED]: "ARRIVED",
+    [ItemStatus.AWAITING_HANDOVER]: "AWAITING_HANDOVER",
+    [ItemStatus.COMPLETED]: "COMPLETED",
+    [ItemStatus.REJECTED]: "REJECTED",
+    [ItemStatus.CANCELLED]: "REJECTED",
+    [ItemStatus.IN_PROGRESS]: "LOGISTIC_APPROVED",
+  };
 
-export function fromBackendRequestStatus(status: BackendRequestStatus | string): ItemStatus {
-  return requestStatusBackendToFrontend[status as BackendRequestStatus] || ItemStatus.PENDING;
+export function fromBackendRequestStatus(
+  status: BackendRequestStatus | string,
+): ItemStatus {
+  return (
+    requestStatusBackendToFrontend[status as BackendRequestStatus] ||
+    ItemStatus.PENDING
+  );
 }
 
-export function toBackendRequestStatus(status: ItemStatus): BackendRequestStatus {
-  return requestStatusFrontendToBackend[status] || 'PENDING';
+export function toBackendRequestStatus(
+  status: ItemStatus,
+): BackendRequestStatus {
+  return requestStatusFrontendToBackend[status] || "PENDING";
 }
 
 // ============================================================================
 // LOAN STATUS MAPPINGS
 // ============================================================================
 
-const loanStatusBackendToFrontend: Record<BackendLoanStatus, LoanRequestStatus> = {
+const loanStatusBackendToFrontend: Record<
+  BackendLoanStatus,
+  LoanRequestStatus
+> = {
   PENDING: LoanRequestStatus.PENDING,
   APPROVED: LoanRequestStatus.APPROVED,
   REJECTED: LoanRequestStatus.REJECTED,
@@ -225,73 +264,102 @@ const loanStatusBackendToFrontend: Record<BackendLoanStatus, LoanRequestStatus> 
   RETURNED: LoanRequestStatus.RETURNED,
 };
 
-const loanStatusFrontendToBackend: Record<LoanRequestStatus, BackendLoanStatus> = {
-  [LoanRequestStatus.PENDING]: 'PENDING',
-  [LoanRequestStatus.APPROVED]: 'APPROVED',
-  [LoanRequestStatus.REJECTED]: 'REJECTED',
-  [LoanRequestStatus.ON_LOAN]: 'ON_LOAN',
-  [LoanRequestStatus.RETURNED]: 'RETURNED',
-  [LoanRequestStatus.OVERDUE]: 'ON_LOAN', // Map OVERDUE to ON_LOAN
-  [LoanRequestStatus.AWAITING_RETURN]: 'ON_LOAN', // Map to ON_LOAN
+const loanStatusFrontendToBackend: Record<
+  LoanRequestStatus,
+  BackendLoanStatus
+> = {
+  [LoanRequestStatus.PENDING]: "PENDING",
+  [LoanRequestStatus.APPROVED]: "APPROVED",
+  [LoanRequestStatus.REJECTED]: "REJECTED",
+  [LoanRequestStatus.ON_LOAN]: "ON_LOAN",
+  [LoanRequestStatus.RETURNED]: "RETURNED",
+  [LoanRequestStatus.OVERDUE]: "ON_LOAN", // Map OVERDUE to ON_LOAN
+  [LoanRequestStatus.AWAITING_RETURN]: "ON_LOAN", // Map to ON_LOAN
 };
 
-export function fromBackendLoanStatus(status: BackendLoanStatus | string): LoanRequestStatus {
-  return loanStatusBackendToFrontend[status as BackendLoanStatus] || LoanRequestStatus.PENDING;
+export function fromBackendLoanStatus(
+  status: BackendLoanStatus | string,
+): LoanRequestStatus {
+  return (
+    loanStatusBackendToFrontend[status as BackendLoanStatus] ||
+    LoanRequestStatus.PENDING
+  );
 }
 
-export function toBackendLoanStatus(status: LoanRequestStatus): BackendLoanStatus {
-  return loanStatusFrontendToBackend[status] || 'PENDING';
+export function toBackendLoanStatus(
+  status: LoanRequestStatus,
+): BackendLoanStatus {
+  return loanStatusFrontendToBackend[status] || "PENDING";
 }
 
 // ============================================================================
 // CUSTOMER STATUS MAPPINGS
 // ============================================================================
 
-const customerStatusBackendToFrontend: Record<BackendCustomerStatus, CustomerStatus> = {
+const customerStatusBackendToFrontend: Record<
+  BackendCustomerStatus,
+  CustomerStatus
+> = {
   ACTIVE: CustomerStatus.ACTIVE,
   INACTIVE: CustomerStatus.INACTIVE,
   CHURNED: CustomerStatus.SUSPENDED, // Map CHURNED to Suspended
 };
 
-const customerStatusFrontendToBackend: Record<CustomerStatus, BackendCustomerStatus> = {
-  [CustomerStatus.ACTIVE]: 'ACTIVE',
-  [CustomerStatus.INACTIVE]: 'INACTIVE',
-  [CustomerStatus.SUSPENDED]: 'CHURNED',
+const customerStatusFrontendToBackend: Record<
+  CustomerStatus,
+  BackendCustomerStatus
+> = {
+  [CustomerStatus.ACTIVE]: "ACTIVE",
+  [CustomerStatus.INACTIVE]: "INACTIVE",
+  [CustomerStatus.SUSPENDED]: "CHURNED",
 };
 
-export function fromBackendCustomerStatus(status: BackendCustomerStatus | string): CustomerStatus {
-  return customerStatusBackendToFrontend[status as BackendCustomerStatus] || CustomerStatus.ACTIVE;
+export function fromBackendCustomerStatus(
+  status: BackendCustomerStatus | string,
+): CustomerStatus {
+  return (
+    customerStatusBackendToFrontend[status as BackendCustomerStatus] ||
+    CustomerStatus.ACTIVE
+  );
 }
 
-export function toBackendCustomerStatus(status: CustomerStatus): BackendCustomerStatus {
-  return customerStatusFrontendToBackend[status] || 'ACTIVE';
+export function toBackendCustomerStatus(
+  status: CustomerStatus,
+): BackendCustomerStatus {
+  return customerStatusFrontendToBackend[status] || "ACTIVE";
 }
 
 // ============================================================================
 // MOVEMENT TYPE MAPPINGS
 // ============================================================================
 
-import type { MovementType } from '../types';
+import type { MovementType } from "../types";
 
-const movementTypeBackendToFrontend: Record<BackendMovementType, MovementType> = {
-  RECEIVED: 'IN_PURCHASE',
-  ISSUED: 'OUT_HANDOVER',
-  CONSUMED: 'OUT_USAGE_CUSTODY',
-  ADJUSTED: 'OUT_ADJUSTMENT',
-  TRANSFERRED: 'OUT_HANDOVER',
-  RETURNED: 'IN_RETURN',
-  DISPOSED: 'OUT_BROKEN',
-};
+const movementTypeBackendToFrontend: Record<BackendMovementType, MovementType> =
+  {
+    RECEIVED: "IN_PURCHASE",
+    ISSUED: "OUT_HANDOVER",
+    CONSUMED: "OUT_USAGE_CUSTODY",
+    ADJUSTED: "OUT_ADJUSTMENT",
+    TRANSFERRED: "OUT_HANDOVER",
+    RETURNED: "IN_RETURN",
+    DISPOSED: "OUT_BROKEN",
+  };
 
-export function fromBackendMovementType(type: BackendMovementType | string): MovementType {
-  return movementTypeBackendToFrontend[type as BackendMovementType] || 'OUT_ADJUSTMENT';
+export function fromBackendMovementType(
+  type: BackendMovementType | string,
+): MovementType {
+  return (
+    movementTypeBackendToFrontend[type as BackendMovementType] ||
+    "OUT_ADJUSTMENT"
+  );
 }
 
 // ============================================================================
 // DATA TRANSFORMERS (for API responses)
 // ============================================================================
 
-import type { Asset, User, Request, LoanRequest, Customer } from '../types';
+import type { Asset, User, Request, LoanRequest, Customer } from "../types";
 
 /**
  * Transform backend asset response to frontend Asset type
@@ -302,11 +370,11 @@ export function transformBackendAsset(backendAsset: any): Asset {
     status: fromBackendAssetStatus(backendAsset.status),
     condition: fromBackendAssetCondition(backendAsset.condition),
     // Map nested model data
-    category: backendAsset.model?.type?.category?.name || '',
-    type: backendAsset.model?.type?.name || '',
+    category: backendAsset.model?.type?.category?.name || "",
+    type: backendAsset.model?.type?.name || "",
     // Map fields
     registrationDate: backendAsset.createdAt,
-    recordedBy: backendAsset.recordedBy || 'System',
+    recordedBy: backendAsset.recordedBy || "System",
     attachments: backendAsset.attachments || [],
     activityLog: backendAsset.activityLog || [],
   };
@@ -335,21 +403,26 @@ export function transformBackendRequest(backendRequest: any): Request {
   return {
     ...backendRequest,
     docNumber: backendRequest.docNumber,
-    requester: backendRequest.requester?.name || backendRequest.requester || '',
+    requester: backendRequest.requester?.name || backendRequest.requester || "",
     status: fromBackendRequestStatus(backendRequest.status),
     order: {
-      type: backendRequest.orderType === 'REGULAR_STOCK' ? 'Regular Stock' :
-            backendRequest.orderType === 'URGENT' ? 'Urgent' : 'Project Based',
+      type:
+        backendRequest.orderType === "REGULAR_STOCK"
+          ? "Regular Stock"
+          : backendRequest.orderType === "URGENT"
+            ? "Urgent"
+            : "Project Based",
       justification: backendRequest.justification,
       project: backendRequest.project,
-      allocationTarget: backendRequest.allocationTarget === 'USAGE' ? 'Usage' : 'Inventory',
+      allocationTarget:
+        backendRequest.allocationTarget === "USAGE" ? "Usage" : "Inventory",
     },
     items: (backendRequest.items || []).map((item: any, idx: number) => ({
       id: item.id || idx + 1,
       itemName: item.itemName,
       itemTypeBrand: item.itemTypeBrand,
       quantity: item.quantity,
-      keterangan: item.reason || '',
+      keterangan: item.reason || "",
       unit: item.unit,
     })),
     isRegistered: backendRequest.isRegistered,
@@ -363,8 +436,8 @@ export function transformBackendRequest(backendRequest: any): Request {
 export function transformBackendLoanRequest(backendLoan: any): LoanRequest {
   return {
     id: backendLoan.id,
-    requester: backendLoan.requester?.name || backendLoan.requester || '',
-    division: backendLoan.requester?.division?.name || '',
+    requester: backendLoan.requester?.name || backendLoan.requester || "",
+    division: backendLoan.requester?.division?.name || "",
     requestDate: backendLoan.requestDate,
     status: fromBackendLoanStatus(backendLoan.status),
     items: (backendLoan.items || []).map((item: any, idx: number) => ({
@@ -372,7 +445,7 @@ export function transformBackendLoanRequest(backendLoan: any): LoanRequest {
       itemName: item.itemName,
       brand: item.brand,
       quantity: item.quantity,
-      keterangan: item.notes || '',
+      keterangan: item.notes || "",
       returnDate: null,
       unit: item.unit,
     })),
@@ -392,13 +465,17 @@ export function transformBackendCustomer(backendCustomer: any): Customer {
   return {
     id: backendCustomer.id,
     name: backendCustomer.name,
-    address: backendCustomer.address || '',
-    phone: backendCustomer.phone || '',
-    email: backendCustomer.email || '',
-    status: backendCustomer.status === 'ACTIVE' ? 'Active' as any :
-            backendCustomer.status === 'INACTIVE' ? 'Inactive' as any : 'Suspended' as any,
+    address: backendCustomer.address || "",
+    phone: backendCustomer.phone || "",
+    email: backendCustomer.email || "",
+    status:
+      backendCustomer.status === "ACTIVE"
+        ? ("Active" as any)
+        : backendCustomer.status === "INACTIVE"
+          ? ("Inactive" as any)
+          : ("Suspended" as any),
     installationDate: backendCustomer.createdAt,
-    servicePackage: backendCustomer.serviceType || '',
+    servicePackage: backendCustomer.serviceType || "",
     installedMaterials: [],
     activityLog: [],
     notes: backendCustomer.notes,

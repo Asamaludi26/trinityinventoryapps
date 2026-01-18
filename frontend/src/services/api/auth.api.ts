@@ -24,11 +24,11 @@ export const authApi = {
    * Login user with email and password
    */
   login: async (email: string, password: string): Promise<LoginResponse> => {
-    const response = await apiClient.post<BackendLoginResponse>("/auth/login", { 
-      email, 
-      password 
+    const response = await apiClient.post<BackendLoginResponse>("/auth/login", {
+      email,
+      password,
     });
-    
+
     return {
       user: transformBackendUser(response.user),
       token: response.token,
@@ -65,7 +65,9 @@ export const authApi = {
    * Verify token validity
    */
   verifyToken: async (): Promise<{ valid: boolean; user: User }> => {
-    const response = await apiClient.post<{ valid: boolean; user: any }>("/auth/verify");
+    const response = await apiClient.post<{ valid: boolean; user: any }>(
+      "/auth/verify",
+    );
     return {
       valid: response.valid,
       user: transformBackendUser(response.user),

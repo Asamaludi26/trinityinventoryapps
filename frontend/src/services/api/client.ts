@@ -84,12 +84,21 @@ class ApiClient {
       }
 
       const data = await response.json();
-      
+
       // Handle paginated responses - extract data array if present
-      if (data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
+      if (
+        data &&
+        typeof data === "object" &&
+        "data" in data &&
+        Array.isArray(data.data)
+      ) {
         // Keep pagination info accessible on the array
         const result = data.data as any;
-        result._pagination = { total: data.total, skip: data.skip, take: data.take };
+        result._pagination = {
+          total: data.total,
+          skip: data.skip,
+          take: data.take,
+        };
         return result as T;
       }
 

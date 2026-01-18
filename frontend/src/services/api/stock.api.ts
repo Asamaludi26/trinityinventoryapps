@@ -94,7 +94,8 @@ export const stockApi = {
     if (filters) {
       if (filters.assetName) params.append("assetName", filters.assetName);
       if (filters.brand) params.append("brand", filters.brand);
-      if (filters.type) params.append("type", toBackendMovementType(filters.type));
+      if (filters.type)
+        params.append("type", toBackendMovementType(filters.type));
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
     }
@@ -110,7 +111,9 @@ export const stockApi = {
    * Uses stock-summary endpoint from assets controller
    */
   getLedger: async (): Promise<StockLedgerItem[]> => {
-    const data = await apiClient.get<StockSummaryItem[]>("/assets/stock-summary");
+    const data = await apiClient.get<StockSummaryItem[]>(
+      "/assets/stock-summary",
+    );
     // Transform stock summary to ledger format
     return data.map((item) => ({
       assetName: item.name,
@@ -136,7 +139,9 @@ export const stockApi = {
   ): Promise<StockMovement> => {
     const payload = {
       ...data,
-      type: data.type ? toBackendMovementType(data.type as MovementType) : undefined,
+      type: data.type
+        ? toBackendMovementType(data.type as MovementType)
+        : undefined,
     };
     const result = await apiClient.post<any>("/assets/consume", payload);
     return transformStockMovement(result);

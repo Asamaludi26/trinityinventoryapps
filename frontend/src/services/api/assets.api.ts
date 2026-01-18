@@ -5,10 +5,10 @@
 
 import { apiClient } from "./client";
 import { Asset } from "../../types";
-import { 
-  transformBackendAsset, 
-  toBackendAssetStatus, 
-  BackendAssetStatus 
+import {
+  transformBackendAsset,
+  toBackendAssetStatus,
+  BackendAssetStatus,
 } from "../../utils/enumMapper";
 
 export interface AssetFilters {
@@ -49,12 +49,15 @@ export const assetsApi = {
       }
       if (filters.search) params.append("search", filters.search);
       if (filters.location) params.append("location", filters.location);
-      if (filters.currentUser) params.append("currentUserId", filters.currentUser);
+      if (filters.currentUser)
+        params.append("currentUserId", filters.currentUser);
       if (filters.skip) params.append("skip", String(filters.skip));
       if (filters.take) params.append("take", String(filters.take));
     }
     const query = params.toString();
-    const response = await apiClient.get<any[]>(`/assets${query ? `?${query}` : ""}`);
+    const response = await apiClient.get<any[]>(
+      `/assets${query ? `?${query}` : ""}`,
+    );
     return response.map(transformBackendAsset);
   },
 
@@ -81,8 +84,10 @@ export const assetsApi = {
       brand: data.brand,
       serialNumber: data.serialNumber,
       macAddress: data.macAddress,
-      status: data.status ? toBackendAssetStatus(data.status as any) : 'IN_STORAGE',
-      condition: data.condition || 'GOOD',
+      status: data.status
+        ? toBackendAssetStatus(data.status as any)
+        : "IN_STORAGE",
+      condition: data.condition || "GOOD",
       location: data.location,
       locationDetail: data.locationDetail,
       purchasePrice: data.purchasePrice,
@@ -117,8 +122,8 @@ export const assetsApi = {
    */
   updateStatus: async (id: string, status: string): Promise<Asset> => {
     const backendStatus = toBackendAssetStatus(status as any);
-    const response = await apiClient.patch<any>(`/assets/${id}/status`, { 
-      status: backendStatus 
+    const response = await apiClient.patch<any>(`/assets/${id}/status`, {
+      status: backendStatus,
     });
     return transformBackendAsset(response);
   },
@@ -154,9 +159,9 @@ export const assetsApi = {
    * Check stock availability
    */
   checkAvailability: async (
-    name: string, 
-    brand: string, 
-    quantity: number
+    name: string,
+    brand: string,
+    quantity: number,
   ): Promise<{
     isSufficient: boolean;
     available: number;

@@ -4,12 +4,11 @@
  */
 
 import { apiClient } from "./client";
+import { LoanRequest, AssetCondition, AssetReturn } from "../../types";
 import {
-  LoanRequest,
-  AssetCondition,
-  AssetReturn,
-} from "../../types";
-import { transformBackendLoanRequest, toBackendLoanStatus } from "../../utils/enumMapper";
+  transformBackendLoanRequest,
+  toBackendLoanStatus,
+} from "../../utils/enumMapper";
 
 export interface LoanFilters {
   status?: string;
@@ -85,7 +84,7 @@ export const loansApi = {
       requestDate: data.requestDate,
       purpose: data.notes,
       expectedReturn: data.items?.[0]?.returnDate,
-      items: data.items.map(item => ({
+      items: data.items.map((item) => ({
         itemName: item.itemName,
         brand: item.brand,
         quantity: item.quantity,
@@ -130,8 +129,10 @@ export const loansApi = {
     payload: { reason?: string; rejectionReason?: string },
   ): Promise<LoanRequest> => {
     // Support both formats
-    const reason = payload.reason || payload.rejectionReason || '';
-    const response = await apiClient.post<any>(`/loan-requests/${id}/reject`, { reason });
+    const reason = payload.reason || payload.rejectionReason || "";
+    const response = await apiClient.post<any>(`/loan-requests/${id}/reject`, {
+      reason,
+    });
     return transformBackendLoanRequest(response);
   },
 
@@ -147,20 +148,22 @@ export const loansApi = {
    * Supports multiple call signatures for backward compatibility
    */
   submitReturn: async (
-    loanRequestIdOrData: string | {
-      loanRequestId: string;
-      returnDate: string;
-      items: ReturnItem[];
-      receivedBy?: string;
-      notes?: string;
-    },
+    loanRequestIdOrData:
+      | string
+      | {
+          loanRequestId: string;
+          returnDate: string;
+          items: ReturnItem[];
+          receivedBy?: string;
+          notes?: string;
+        },
     items?: ReturnItem[],
   ): Promise<LoanRequest> => {
     // Support both signatures
     let requestData: any;
     let loanRequestId: string;
-    
-    if (typeof loanRequestIdOrData === 'string') {
+
+    if (typeof loanRequestIdOrData === "string") {
       loanRequestId = loanRequestIdOrData;
       requestData = {
         loanRequestId,
@@ -171,7 +174,7 @@ export const loansApi = {
       loanRequestId = loanRequestIdOrData.loanRequestId;
       requestData = loanRequestIdOrData;
     }
-    
+
     const response = await apiClient.post<any>(
       `/loan-requests/${loanRequestId}/return`,
       requestData,
@@ -239,7 +242,10 @@ export const returnsApi = {
   /**
    * Update return
    */
-  update: async (id: string, data: Partial<AssetReturn>): Promise<AssetReturn> => {
+  update: async (
+    id: string,
+    data: Partial<AssetReturn>,
+  ): Promise<AssetReturn> => {
     return apiClient.patch<AssetReturn>(`/returns/${id}`, data);
   },
 
@@ -249,20 +255,22 @@ export const returnsApi = {
    */
   verify: async (
     id: string,
-    acceptedAssetIdsOrPayload: string[] | { verifiedBy: string; notes?: string },
+    acceptedAssetIdsOrPayload:
+      | string[]
+      | { verifiedBy: string; notes?: string },
     verifiedBy?: string,
   ): Promise<AssetReturn> => {
     let payload: any;
-    
+
     if (Array.isArray(acceptedAssetIdsOrPayload)) {
       payload = {
         acceptedAssetIds: acceptedAssetIdsOrPayload,
-        verifiedBy: verifiedBy || '',
+        verifiedBy: verifiedBy || "",
       };
     } else {
       payload = acceptedAssetIdsOrPayload;
     }
-    
+
     return apiClient.post<AssetReturn>(`/returns/${id}/verify`, payload);
   },
 };

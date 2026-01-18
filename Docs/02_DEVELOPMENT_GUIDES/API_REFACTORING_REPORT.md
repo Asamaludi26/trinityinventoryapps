@@ -11,21 +11,26 @@ Refactoring API layer frontend untuk menghilangkan mock simulation dan mengimple
 ### 1. API Client (`frontend/src/services/api/client.ts`)
 
 **Perubahan:**
+
 - `USE_MOCK` di-hardcode menjadi `false` - tidak lagi bergantung pada environment variable
 - Base URL diupdate untuk menyertakan prefix `/v1` API versioning
 - Penanganan paginated response (mengekstrak data array dengan metadata `_pagination`)
 - Mendukung format token storage lama dan baru
 
 **Sebelum:**
+
 ```typescript
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+export const USE_MOCK = import.meta.env.VITE_USE_MOCK !== "false";
+export const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 ```
 
 **Sesudah:**
+
 ```typescript
 export const USE_MOCK = false; // Mock disabled - pure API mode
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+export const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3001/api/v1";
 ```
 
 ---
@@ -35,43 +40,47 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 **File Baru** - Menyediakan transformasi bidirectional antara format enum backend (Prisma) dan frontend (Indonesian labels).
 
 **Backend menggunakan:**
+
 - SCREAMING_SNAKE_CASE enum values (contoh: `IN_STORAGE`, `SUPER_ADMIN`)
 
 **Frontend menggunakan:**
+
 - Indonesian display labels (contoh: `Di Gudang`, `Super Admin`)
 
 **Fungsi yang tersedia:**
 
-| Function | Purpose |
-|----------|---------|
-| `fromBackendUserRole()` | SUPER_ADMIN → 'Super Admin' |
-| `toBackendUserRole()` | 'Super Admin' → SUPER_ADMIN |
-| `fromBackendAssetStatus()` | IN_STORAGE → AssetStatus.IN_STORAGE |
-| `toBackendAssetStatus()` | AssetStatus.IN_STORAGE → 'IN_STORAGE' |
-| `fromBackendAssetCondition()` | GOOD → AssetCondition.GOOD |
-| `toBackendAssetCondition()` | AssetCondition.GOOD → 'GOOD' |
-| `fromBackendRequestStatus()` | PENDING → ItemStatus.PENDING |
-| `toBackendRequestStatus()` | ItemStatus.PENDING → 'PENDING' |
-| `fromBackendLoanStatus()` | APPROVED → LoanRequestStatus.APPROVED |
-| `toBackendLoanStatus()` | LoanRequestStatus.APPROVED → 'APPROVED' |
-| `fromBackendCustomerStatus()` | ACTIVE → CustomerStatus.ACTIVE |
-| `toBackendCustomerStatus()` | CustomerStatus.ACTIVE → 'ACTIVE' |
-| `transformBackendAsset()` | Transform full asset object |
-| `transformBackendUser()` | Transform full user object |
-| `transformBackendRequest()` | Transform full request object |
-| `transformBackendLoanRequest()` | Transform full loan request object |
-| `transformBackendCustomer()` | Transform full customer object |
+| Function                        | Purpose                                 |
+| ------------------------------- | --------------------------------------- |
+| `fromBackendUserRole()`         | SUPER_ADMIN → 'Super Admin'             |
+| `toBackendUserRole()`           | 'Super Admin' → SUPER_ADMIN             |
+| `fromBackendAssetStatus()`      | IN_STORAGE → AssetStatus.IN_STORAGE     |
+| `toBackendAssetStatus()`        | AssetStatus.IN_STORAGE → 'IN_STORAGE'   |
+| `fromBackendAssetCondition()`   | GOOD → AssetCondition.GOOD              |
+| `toBackendAssetCondition()`     | AssetCondition.GOOD → 'GOOD'            |
+| `fromBackendRequestStatus()`    | PENDING → ItemStatus.PENDING            |
+| `toBackendRequestStatus()`      | ItemStatus.PENDING → 'PENDING'          |
+| `fromBackendLoanStatus()`       | APPROVED → LoanRequestStatus.APPROVED   |
+| `toBackendLoanStatus()`         | LoanRequestStatus.APPROVED → 'APPROVED' |
+| `fromBackendCustomerStatus()`   | ACTIVE → CustomerStatus.ACTIVE          |
+| `toBackendCustomerStatus()`     | CustomerStatus.ACTIVE → 'ACTIVE'        |
+| `transformBackendAsset()`       | Transform full asset object             |
+| `transformBackendUser()`        | Transform full user object              |
+| `transformBackendRequest()`     | Transform full request object           |
+| `transformBackendLoanRequest()` | Transform full loan request object      |
+| `transformBackendCustomer()`    | Transform full customer object          |
 
 ---
 
 ### 3. Auth API (`frontend/src/services/api/auth.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus
 - Menggunakan `transformBackendUser()` untuk response mapping
 - Menambahkan method `verifyToken()` untuk validasi token
 
 **Endpoints:**
+
 - `POST /auth/login` - Login user
 - `POST /auth/refresh` - Refresh token
 - `POST /auth/logout` - Logout user
@@ -83,11 +92,13 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 4. Assets API (`frontend/src/services/api/assets.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus (~200 lines → ~170 lines)
 - Menggunakan `toBackendAssetStatus()` untuk outgoing requests
 - Menggunakan `transformBackendAsset()` untuk responses
 
 **Endpoints:**
+
 - `GET /assets` - Get all assets dengan filters
 - `GET /assets/:id` - Get single asset
 - `POST /assets` - Create asset
@@ -103,12 +114,14 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 5. Requests API (`frontend/src/services/api/requests.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus
 - Menggunakan `toBackendRequestStatus()` untuk filters
 - Menggunakan `transformBackendRequest()` untuk responses
 - Endpoint methods disesuaikan dengan backend (approve menggunakan POST, reject menggunakan POST dengan reason)
 
 **Endpoints:**
+
 - `GET /requests` - Get all requests dengan filters
 - `GET /requests/:id` - Get single request
 - `POST /requests` - Create request
@@ -122,11 +135,13 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 6. Loans API (`frontend/src/services/api/loans.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus (~501 lines → ~158 lines)
 - Menggunakan `toBackendLoanStatus()` untuk filters
 - Menggunakan `transformBackendLoanRequest()` untuk responses
 
 **Endpoints:**
+
 - `GET /loan-requests` - Get all loan requests
 - `GET /loan-requests/:id` - Get single loan request
 - `POST /loan-requests` - Create loan request
@@ -142,10 +157,12 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 7. Transactions API (`frontend/src/services/api/transactions.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus (~464 lines → ~230 lines)
 - Status mapping untuk DismantleStatus/MaintenanceStatus
 
 **Endpoints:**
+
 - **Handovers:**
   - `GET /transactions/handovers`
   - `GET /transactions/handovers/:id`
@@ -179,11 +196,13 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 8. Master Data API (`frontend/src/services/api/master-data.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus (~286 lines → ~150 lines)
 - Menggunakan `transformBackendUser()` untuk users
 - Menggunakan `transformBackendCustomer()` untuk customers
 
 **Endpoints:**
+
 - **Users:**
   - `GET /users`
   - `GET /users/:id`
@@ -218,10 +237,12 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 9. Notifications API (`frontend/src/services/api/notifications.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus
 - Backend menggunakan JWT token untuk menentukan user
 
 **Endpoints:**
+
 - `GET /notifications` - Get notifications for current user
 - `GET /notifications/unread-count` - Get unread count
 - `PATCH /notifications/:id/read` - Mark as read
@@ -233,10 +254,12 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 10. Stock API (`frontend/src/services/api/stock.api.ts`)
 
 **Perubahan:**
+
 - Semua mock logic dihapus (~268 lines → ~180 lines)
 - Menggunakan `/assets` endpoints karena stock management adalah bagian dari Assets controller di backend
 
 **Endpoints:**
+
 - `GET /assets/stock-summary` - Get stock summary
 - `GET /assets/check-availability` - Check stock availability
 - `POST /assets/consume` - Consume stock (for installation/maintenance)
@@ -246,6 +269,7 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ### 11. Unified API (`frontend/src/services/api/unified.api.ts`)
 
 **Perubahan:**
+
 - Semua mock data imports dan initialization dihapus
 - Semua USE_MOCK conditionals dihapus
 - Menambahkan enum transformers untuk semua data types
@@ -256,58 +280,63 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 ## Enum Mappings Reference
 
 ### UserRole
+
 | Backend (Prisma) | Frontend (Display) |
-|------------------|-------------------|
-| SUPER_ADMIN | Super Admin |
-| ADMIN_LOGISTIK | Admin Logistik |
-| ADMIN_PURCHASE | Admin Purchase |
-| LEADER | Leader |
-| STAFF | Staff |
-| TEKNISI | Staff (mapped) |
+| ---------------- | ------------------ |
+| SUPER_ADMIN      | Super Admin        |
+| ADMIN_LOGISTIK   | Admin Logistik     |
+| ADMIN_PURCHASE   | Admin Purchase     |
+| LEADER           | Leader             |
+| STAFF            | Staff              |
+| TEKNISI          | Staff (mapped)     |
 
 ### AssetStatus
-| Backend (Prisma) | Frontend (Enum) |
-|------------------|-----------------|
-| IN_STORAGE | Di Gudang |
-| IN_USE | Sedang Digunakan |
-| ON_LOAN | Sedang Digunakan (mapped) |
-| IN_CUSTODY | Dipegang Personel |
-| UNDER_REPAIR | Dalam Perbaikan |
-| OUT_FOR_SERVICE | Dikirim Perbaikan |
-| DAMAGED | Rusak |
-| AWAITING_RETURN | Menunggu Pengembalian |
-| CONSUMED | Habis Pakai |
-| DISPOSED | Dinonaktifkan |
+
+| Backend (Prisma) | Frontend (Enum)           |
+| ---------------- | ------------------------- |
+| IN_STORAGE       | Di Gudang                 |
+| IN_USE           | Sedang Digunakan          |
+| ON_LOAN          | Sedang Digunakan (mapped) |
+| IN_CUSTODY       | Dipegang Personel         |
+| UNDER_REPAIR     | Dalam Perbaikan           |
+| OUT_FOR_SERVICE  | Dikirim Perbaikan         |
+| DAMAGED          | Rusak                     |
+| AWAITING_RETURN  | Menunggu Pengembalian     |
+| CONSUMED         | Habis Pakai               |
+| DISPOSED         | Dinonaktifkan             |
 
 ### RequestStatus
-| Backend (Prisma) | Frontend (ItemStatus) |
-|------------------|----------------------|
-| PENDING | Menunggu |
-| LOGISTIC_APPROVED | Disetujui Logistik |
-| LOGISTIC_REJECTED | Ditolak |
-| PURCHASE_APPROVED | Disetujui |
-| PURCHASE_REJECTED | Ditolak |
-| ORDERED | Proses Pembelian |
-| ARRIVED | Tiba |
-| AWAITING_HANDOVER | Siap Serah Terima |
-| COMPLETED | Selesai |
-| REJECTED | Ditolak |
+
+| Backend (Prisma)  | Frontend (ItemStatus) |
+| ----------------- | --------------------- |
+| PENDING           | Menunggu              |
+| LOGISTIC_APPROVED | Disetujui Logistik    |
+| LOGISTIC_REJECTED | Ditolak               |
+| PURCHASE_APPROVED | Disetujui             |
+| PURCHASE_REJECTED | Ditolak               |
+| ORDERED           | Proses Pembelian      |
+| ARRIVED           | Tiba                  |
+| AWAITING_HANDOVER | Siap Serah Terima     |
+| COMPLETED         | Selesai               |
+| REJECTED          | Ditolak               |
 
 ### LoanStatus
+
 | Backend (Prisma) | Frontend (LoanRequestStatus) |
-|------------------|------------------------------|
-| PENDING | Menunggu Persetujuan |
-| APPROVED | Disetujui |
-| REJECTED | Ditolak |
-| ON_LOAN | Dipinjam |
-| RETURNED | Dikembalikan |
+| ---------------- | ---------------------------- |
+| PENDING          | Menunggu Persetujuan         |
+| APPROVED         | Disetujui                    |
+| REJECTED         | Ditolak                      |
+| ON_LOAN          | Dipinjam                     |
+| RETURNED         | Dikembalikan                 |
 
 ### CustomerStatus
+
 | Backend (Prisma) | Frontend (CustomerStatus) |
-|------------------|---------------------------|
-| ACTIVE | Active |
-| INACTIVE | Inactive |
-| CHURNED | Suspended (mapped) |
+| ---------------- | ------------------------- |
+| ACTIVE           | Active                    |
+| INACTIVE         | Inactive                  |
+| CHURNED          | Suspended (mapped)        |
 
 ---
 
@@ -334,24 +363,24 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/ap
 
 ## File Changes Summary
 
-| File | Lines Before | Lines After | Change |
-|------|-------------|-------------|--------|
-| client.ts | ~100 | ~100 | Updated config |
-| auth.api.ts | ~150 | ~80 | -47% |
-| assets.api.ts | ~200 | ~170 | -15% |
-| requests.api.ts | ~250 | ~130 | -48% |
-| loans.api.ts | ~501 | ~158 | -68% |
-| transactions.api.ts | ~464 | ~230 | -50% |
-| master-data.api.ts | ~286 | ~150 | -47% |
-| notifications.api.ts | ~120 | ~75 | -38% |
-| stock.api.ts | ~268 | ~180 | -33% |
-| unified.api.ts | ~300 | ~200 | -33% |
-| **enumMapper.ts** | **0** | **~410** | **NEW** |
+| File                 | Lines Before | Lines After | Change         |
+| -------------------- | ------------ | ----------- | -------------- |
+| client.ts            | ~100         | ~100        | Updated config |
+| auth.api.ts          | ~150         | ~80         | -47%           |
+| assets.api.ts        | ~200         | ~170        | -15%           |
+| requests.api.ts      | ~250         | ~130        | -48%           |
+| loans.api.ts         | ~501         | ~158        | -68%           |
+| transactions.api.ts  | ~464         | ~230        | -50%           |
+| master-data.api.ts   | ~286         | ~150        | -47%           |
+| notifications.api.ts | ~120         | ~75         | -38%           |
+| stock.api.ts         | ~268         | ~180        | -33%           |
+| unified.api.ts       | ~300         | ~200        | -33%           |
+| **enumMapper.ts**    | **0**        | **~410**    | **NEW**        |
 
 **Total lines removed (mock code):** ~1,500+ lines
 **Total lines added (new utility):** ~410 lines
 
 ---
 
-*Last updated: 2025-01-XX*
-*Author: AI Assistant*
+_Last updated: 2025-01-XX_
+_Author: AI Assistant_

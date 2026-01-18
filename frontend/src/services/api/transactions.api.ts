@@ -164,9 +164,7 @@ export const maintenancesApi = {
 
   getById: async (id: string): Promise<Maintenance | null> => {
     try {
-      const data = await apiClient.get<any>(
-        `/transactions/maintenances/${id}`,
-      );
+      const data = await apiClient.get<any>(`/transactions/maintenances/${id}`);
       return transformMaintenance(data);
     } catch {
       return null;

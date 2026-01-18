@@ -166,7 +166,10 @@ export const categoriesApi = {
     const results: AssetCategory[] = [];
     for (const cat of categories) {
       if (cat.id) {
-        const updated = await apiClient.patch<AssetCategory>(`/categories/${cat.id}`, cat);
+        const updated = await apiClient.patch<AssetCategory>(
+          `/categories/${cat.id}`,
+          cat,
+        );
         results.push(updated);
       } else {
         const created = await apiClient.post<AssetCategory>("/categories", cat);

@@ -53,7 +53,9 @@ export const notificationsApi = {
    * Create a new notification
    * Note: Typically created by backend automatically for system events
    */
-  create: async (notification: Omit<Notification, "id">): Promise<Notification> => {
+  create: async (
+    notification: Omit<Notification, "id">,
+  ): Promise<Notification> => {
     return apiClient.post<Notification>("/notifications", notification);
   },
 
